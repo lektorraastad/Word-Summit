@@ -333,6 +333,10 @@
   .level-card .lc-text { flex: 1 1 420px; }
   .level-card h2 { font-size: 1.5rem; margin-bottom: 0.2rem; }
   .level-card p { color: var(--muted); }
+  .level-card .lc-focus { margin-top: 0.15rem; }
+  .level-card .lc-focus p { margin: 0 0 0.25rem; }
+  .level-card .lc-focus-line { color: var(--text); }
+  .level-card .lc-focus-line .howto-btn { margin-left: 0.4rem; }
   .progress-line { flex: 0 1 340px; display: flex; flex-direction: column; gap: 0.5rem; }
   .progress-line .label { font-weight: 700; }
   .segbar { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 6px; }
@@ -852,7 +856,7 @@
   /* Short, wide screens (school laptops at 125% zoom): the mountain sits beside the text at its real shape, so it reads
      as a climb, and the beacon is drawn larger (app.js, SIDE_MQ). The glow of a fully lit beacon may spill above the card. */
   @media (max-height: 820px) and (min-width: 1050px) {
-    .level-card { display: grid; grid-template-columns: minmax(250px, 31%) minmax(0, 1fr); column-gap: 2.25rem; row-gap: 0.85rem;
+    .level-card { display: grid; grid-template-columns: minmax(250px, 33%) minmax(0, 1fr); column-gap: 2rem; row-gap: 0.7rem;
       align-content: center; padding: 1.1rem 1.75rem 1.2rem; }
     .level-card .lc-row { display: contents; }
     .level-card .lc-text { grid-column: 1; grid-row: 1; flex: none; align-self: end; }
@@ -866,6 +870,9 @@
     .welcome-hero .lead { grid-column: 1; grid-row: 2; margin: 0; }
     .welcome-hero .route-hint { grid-column: 1; grid-row: 3; margin: 0; align-self: start; }
     .welcome-hero .route { grid-column: 2; grid-row: 1 / span 3; align-self: center; max-height: none; }
+    .level-card .lc-focus p { margin-bottom: 0.15rem; }
+    .level-card .lc-focus-tip { font-size: 0.9rem; line-height: 1.35; }
+    .level-card .route-hint { font-size: 0.85rem; line-height: 1.35; }
     .level-card .lc-text h2, .level-card .lc-text p, .level-card .progress-line .label, .level-card .route-hint,
     .welcome-hero h1, .welcome-hero .lead, .welcome-hero .route-hint { text-wrap: balance; }
   }
@@ -947,7 +954,7 @@
 
 const TEST_MODE = false;
 const DELIVERY = "hosted"; // "hosted" (GitHub Pages) or "file" (shared as a file)
-const LIBRARY_VERSION = "2026-11-14.0813";
+const LIBRARY_VERSION = "2026-11-14.0903";
 
 // The library is stored scrambled ("RCL1:…") so texts and answers aren't readable in the page source.
 // This is light protection that takes some effort to undo, not real security.
@@ -974,7 +981,7 @@ const LEVEL_INFO = {
   "A2+": { title: "Almost B1", desc: "Longer texts with more details and dialogue. You are close to B1." },
   "B1":  { title: "Independent reader", desc: "Stories and articles where you start to read between the lines." },
   "B1+": { title: "Almost B2", desc: "Longer texts that build your reading stamina. You are close to B2." },
-  "B2":  { title: "Confident reader", desc: "Articles about science and society, with harder words." },
+  "B2":  { title: "Confident reader", desc: "Longer texts with harder words you can work out from context." },
   "B2+": { title: "Almost C1", desc: "Texts with complex arguments and ideas. You are close to C1." },
   "C1":  { title: "Advanced reader", desc: "Demanding texts with abstract ideas and the writer's own opinions." },
   "C1+": { title: "Almost C2", desc: "Challenging essays and literary texts. You are close to C2." },
@@ -989,7 +996,7 @@ const LEVEL_TIPS = {
   "A2+": ["Almost B1", "You can follow longer texts with more details and some talking between people."],
   "B1":  ["Independent reader", "You can read a story or an article on your own and start to read between the lines."],
   "B1+": ["Almost B2", "You can keep going through longer texts and see what the writer wants you to think."],
-  "B2":  ["Confident reader", "You can understand articles about science and society, even with some hard words."],
+  "B2":  ["Confident reader", "You can read longer texts on your own and work out most hard words from the text around them."],
   "B2+": ["Almost C1", "You can follow a writer's arguments and see how they are built up."],
   "C1":  ["Advanced reader", "You can read hard texts with big ideas and spot the writer's own opinion."],
   "C1+": ["Almost C2", "You can read difficult essays and stories where a lot is only hinted at."],
@@ -2135,6 +2142,21 @@ function segBar(done, total, cls = "segbar") {
   return `<span class="${cls}" aria-hidden="true">${out}</span>`;
 }
 
+// The left side of the home card: the student's own focus, not a second copy of the level tooltip
+function focusBlock() {
+  const f = focusState();
+  if (f.kind === "skill") {
+    const k = f.skill;
+    return `<div class="lc-focus" data-focus="skill">
+            <p class="lc-focus-line"><strong>Your focus now: ${esc(SKILL_LABELS[k] || k)}.</strong> ${howToButton(k)}</p>
+            <p class="lc-focus-tip">Tip: ${esc(SKILL_TIPS[k] || "")}</p>
+          </div>`;
+  }
+  const line = f.kind === "early"
+    ? "Read a few texts, and Word Summit will show you which reading skill to focus on."
+    : "Your reading skills are even. Keep climbing!";
+  return `<div class="lc-focus" data-focus="${f.kind}"><p class="lc-focus-line">${esc(line)}</p></div>`;
+}
 function levelCard() {
   const L = state.level;
   const info = LEVEL_INFO[L] || { title: "", desc: "" };
@@ -2148,7 +2170,7 @@ function levelCard() {
       <div class="lc-row">
         <div class="lc-text">
           <h2>${esc(L)}, ${esc(lowerFirst(info.title))}</h2>
-          <p>${esc(info.desc)}</p>
+          ${focusBlock()}
         </div>
         <div class="progress-line">
           <div class="label">${esc(p.line)}</div>
@@ -3219,6 +3241,14 @@ function hardestSkill() {
   const others = rows.filter(r => r !== low);
   const avg = sum(others.map(r => r.w.pct)) / others.length;
   return low.w.pct < 0.7 && avg - low.w.pct >= 0.15 - 1e-9 ? low.k : null;
+}
+// What the home card says about the student's focus (design 14 November 2026):
+// a skill that stands out, too few answers to tell yet, or skills that are even.
+function focusState() {
+  const k = hardestSkill();
+  if (k) return { kind: "skill", skill: k };
+  const counted = SKILLS.filter(s => skillWindow(s).count >= 5).length;
+  return { kind: counted < 3 ? "early" : "even" };
 }
 function currentTierIndex(skill) {
   const w = skillWindow(skill);
