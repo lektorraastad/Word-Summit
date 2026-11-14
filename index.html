@@ -235,7 +235,7 @@
     font-weight: 700; font-size: 1.03rem; transition: background-color 0.15s, border-color 0.15s, color 0.15s;
   }
   .btn-primary { background: var(--primary); color: var(--on-primary); }
-  .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+  .btn-primary:hover:not(:disabled):not([aria-disabled="true"]) { background: var(--primary-hover); }
   .btn-primary:disabled { cursor: default; }
   .btn-secondary { background: var(--surface); border-color: var(--primary); color: var(--primary); }
   .btn-secondary:hover { background: var(--primary-soft); }
@@ -311,8 +311,10 @@
 
   .route .lvl, .route .beacon-btn { cursor: pointer; outline: none; }
   .route .hit { fill: transparent; }
-  .route .ring { fill: none; stroke: none; }
-  .route .lvl:focus-visible .ring, .route .beacon-btn:focus-visible .ring { stroke: var(--r-cap); stroke-width: 2.5; }
+  .route .ring, .route .ring-halo { fill: none; stroke: none; vector-effect: non-scaling-stroke; }
+  /* the focus ring is two colours (dark under light) so it shows on the dark mountain, the pale snow and the sky, in every theme */
+  .route .lvl:focus-visible .ring-halo, .route .beacon-btn:focus-visible .ring-halo { stroke: #0B1A26; stroke-width: 5px; }
+  .route .lvl:focus-visible .ring, .route .beacon-btn:focus-visible .ring { stroke: #fff; stroke-width: 2px; }
   .route-hint { margin: 0.15rem 0 0; font-size: 0.85rem; color: var(--muted); }
   .on-panel .route-hint { color: var(--panel-muted); }
   .level-tip { position: absolute; z-index: 61; width: 280px; max-width: calc(100vw - 16px); padding: 0.75rem 0.9rem; background: var(--surface); color: var(--text);
@@ -395,7 +397,7 @@
   .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; }
   .step { background: var(--surface); border-radius: 16px; padding: 1.4rem 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
   .step-num { width: 36px; height: 36px; border-radius: 50%; background: var(--primary-soft); color: var(--primary); font-weight: 700; display: grid; place-items: center; }
-  .step h3 { font-family: var(--serif); font-weight: 600; font-size: 1.3rem; }
+  .step h2 { font-family: var(--serif); font-weight: 600; font-size: 1.3rem; letter-spacing: normal; }
   .step p { color: var(--muted); }
   .step p strong { color: var(--text); border-bottom: 2px dotted var(--primary); }
   .welcome-form { background: var(--surface); border-radius: var(--radius); padding: 1.75rem 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem 2rem; align-items: end; }
@@ -407,13 +409,15 @@
   .field-label { display: block; font-weight: 700; margin-bottom: 0.45rem; }
   .field {
     width: 100%; min-height: 48px; padding: 0.7rem 1rem; font: inherit; font-size: 1.05rem; color: var(--text);
-    background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; margin-bottom: 1.2rem;
+    background: var(--surface); border: 1.5px solid var(--muted); border-radius: 10px; margin-bottom: 1.2rem;
   }
   body:not(.theme-dark) .field { background: #FFFFFF; }
   .field::placeholder { color: var(--muted); }
-  .field:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+  /* a screen's heading takes focus after each screen change so a screen reader starts there; it is not a control, so it gets no box */
+  #app h1[tabindex="-1"]:focus, #app h2[tabindex="-1"]:focus, #app:focus { outline: none; }
+  .field:focus { outline: 3px solid var(--primary); outline-offset: 2px; border-color: var(--primary); }
   .test-note { margin-top: 1rem; font-size: 0.9rem; padding: 0.75rem 0.9rem; border-radius: 10px; background: var(--warn-soft); color: var(--warn); }
-  .first-test h3 { font-family: var(--serif); font-weight: 600; font-size: 1.3rem; margin-bottom: 0.3rem; }
+  .first-test h2 { font-family: var(--serif); font-weight: 600; font-size: 1.3rem; margin-bottom: 0.3rem; letter-spacing: normal; }
   .first-test p { color: var(--muted); }
   .placement-card { max-width: 860px; margin: 0 auto; padding: 2rem 2.25rem; background: var(--surface); border-radius: var(--radius); display: block; }
   .placement-card h1 { font-size: 2.1rem; margin-bottom: 0.5rem; }
@@ -465,9 +469,9 @@
   .finish-zone { margin-top: 1.75rem; padding-top: 1.4rem; border-top: 1px solid var(--border-soft); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
   .finish-zone .finish-help { order: -1; }
   .btn-finish { position: relative; overflow: hidden; min-width: 240px; font-size: 1.06rem; }
-  .btn-finish:disabled { background: var(--primary-soft); color: var(--muted); }
+  .btn-finish[aria-disabled="true"] { background: var(--primary-soft); color: var(--muted); cursor: default; }
   .btn-finish .fill { position: absolute; inset: 0 auto 0 0; width: 0; background: color-mix(in srgb, var(--primary) 28%, transparent); transition: width 0.25s linear; }
-  .btn-finish:not(:disabled) .fill { display: none; }
+  .btn-finish:not([aria-disabled="true"]) .fill { display: none; }
   .btn-finish .lbl { position: relative; }
   .finish-help { font-size: 0.95rem; color: var(--muted); min-height: 1.3em; }
 
@@ -543,13 +547,13 @@
   body.theme-dark .opt.correct .key, body.theme-dark .opt.wrong .key { color: #0B1A26; }
   .feedback { margin-top: 1.2rem; padding: 1.1rem 1.25rem; border-radius: 14px; animation: pop 0.15s ease-out; }
   .feedback.hint { background: var(--warn-soft); color: var(--text); }
-  .feedback.hint h4 { color: var(--warn); }
+  .feedback.hint h3 { color: var(--warn); }
   .feedback.good { background: var(--success-soft); }
-  .feedback.good h4 { color: var(--success); }
+  .feedback.good h3 { color: var(--success); }
   .feedback.half { background: var(--warn-soft); }
-  .feedback.half h4 { color: var(--warn); }
+  .feedback.half h3 { color: var(--warn); }
   .feedback.bad { background: var(--surface-2); }
-  .feedback h4 { font-size: 1.06rem; margin-bottom: 0.3rem; }
+  .feedback h3 { font-size: 1.06rem; margin-bottom: 0.3rem; }
   .feedback p { margin-bottom: 0.9rem; }
   .feedback .tip { margin-bottom: 0.5rem; color: var(--text); }
   .feedback .actions { display: flex; flex-direction: column; gap: 0.5rem; }
@@ -638,7 +642,7 @@
 
   /* ---------- Achievements ---------- */
   .gold-stat { color: var(--gold); }
-  .journey-title { font-size: 1rem; font-weight: 700; margin: 1rem 0 0.2rem; color: var(--text); }
+  .journey-title { font-family: var(--sans); font-size: 1rem; font-weight: 700; letter-spacing: normal; margin: 1rem 0 0.2rem; color: var(--text); }
   .journey-route { max-width: 760px; margin: 0.2rem 0 0.4rem; }
   .journey { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; }
   .journey-step { display: inline-flex; flex-direction: column; align-items: center; padding: 0.3rem 0.7rem; border-radius: 10px; background: var(--surface-2); line-height: 1.2; }
@@ -832,7 +836,7 @@
     .opt { min-height: 46px; padding: 0.5rem 0.9rem; font-size: 1rem; }
     .opt .key { width: 26px; height: 26px; }
     .feedback { margin-top: 0.6rem; padding: 0.7rem 1rem; font-size: 0.95rem; line-height: 1.4; }
-    .feedback h4 { font-size: 1rem; margin-bottom: 0.2rem; }
+    .feedback h3 { font-size: 1rem; margin-bottom: 0.2rem; }
     .feedback p { margin-bottom: 0.25rem; }
     .feedback .actions { margin-top: 0.5rem; }
     .feedback .actions .btn { min-height: 44px; padding-top: 0.4rem; padding-bottom: 0.4rem; }
@@ -911,6 +915,10 @@
   .journey-arrow svg.ic { width: 1em; height: 1em; vertical-align: -0.15em; }
   #copy-msg svg.ic { width: 1em; height: 1em; vertical-align: -0.15em; color: var(--success); }
   .howto-btn { min-height: 30px; display: inline-flex; align-items: center; }
+  /* touch and phones: the small buttons grow to 44 px (item 16 of the 14 November review) */
+  @media (max-width: 600px), (pointer: coarse) {
+    .howto-btn, #btn-other-texts, #btn-reset { min-height: 44px; min-width: 44px; }
+  }
   @media (max-width: 600px), (pointer: coarse) {
     .kbd-hint, #btn-clue kbd { display: none; }
   }
@@ -924,6 +932,20 @@
     .rtable .acc .bar { display: none; } .rtable td .muted.small { display: block; }
     .report-card { padding: 1.25rem 1rem; }
   }
+  /* Stage 24: on a phone the header is one row (icons only), and every button is 44 px */
+  @media (max-width: 600px) {
+    .topbar { flex-wrap: nowrap; gap: 0.3rem; padding: 0.5rem 0.5rem; min-height: 60px; }
+    .brand-name { display: none; }
+    .brand { min-width: 44px; min-height: 44px; padding: 0; justify-content: center; }
+    .topbar .spacer { flex: 1 1 0; min-width: 0; }
+    #level-pill-slot { min-width: 0; }
+    .level-pill { padding: 0.3rem 0.6rem; gap: 0.4rem; font-size: 0.9rem; }
+    #vault-slot { gap: 0.25rem; }
+    .icon-btn { position: relative; min-width: 44px; padding: 0.45rem 0.5rem; justify-content: center; }
+    .icon-btn .count-badge { position: absolute; top: -4px; right: -4px; }
+  }
+  @media (max-width: 440px) { .level-pill .segs { display: none; } }
+  @media (max-width: 340px) { .level-pill .pill-count { display: none; } }
 </style>
 </head>
 <body>
@@ -954,7 +976,7 @@
 
 const TEST_MODE = false;
 const DELIVERY = "hosted"; // "hosted" (GitHub Pages) or "file" (shared as a file)
-const LIBRARY_VERSION = "2026-11-14.0903";
+const LIBRARY_VERSION = "2026-11-14.1641";
 
 // The library is stored scrambled ("RCL1:…") so texts and answers aren't readable in the page source.
 // This is light protection that takes some effort to undo, not real security.
@@ -1002,7 +1024,7 @@ const LEVEL_TIPS = {
   "C1+": ["Almost C2", "You can read difficult essays and stories where a lot is only hinted at."],
   "C2":  ["Expert reader", "You can read almost anything written for adults, with full understanding."]
 };
-const ROUTE_HINT = `<p class="route-hint">Point at or tap a level or the beacon to see what it means.</p>`;
+const ROUTE_HINT = `<p class="route-hint">Tap or click a level or the beacon to see what it means.</p>`;
 
 // Generated by tools/make_icons.py from Phosphor Icons (MIT licence, (c) Phosphor Icons, https://phosphoricons.com).
 const ICON_PATHS = {
@@ -1134,6 +1156,7 @@ const HOWTO = {
   }
 };
 const howToButton = skill => `<button type="button" class="howto-btn" data-howto="${esc(skill)}" aria-label="How to: ${esc(SKILL_LABELS[skill] || skill)}">How to</button>`;
+let dialogReturn = null; // set by a dialog when it opens: puts focus back where the student was
 function openHowTo(skill) {
   const h = HOWTO[skill];
   if (!h) return;
@@ -1156,10 +1179,15 @@ function openHowTo(skill) {
       </div>
     </div>`;
   const back = document.activeElement;
+  // back to the button that opened it, even if the screen was redrawn meanwhile
+  dialogReturn = () => {
+    const el = back && document.body.contains(back) ? back
+      : document.querySelector(`.howto-btn[data-howto="${skill}"]`) || document.querySelector("#app h1, #app h2");
+    if (el) el.focus({ preventScroll: true });
+  };
   $("howto-close").focus();
-  const close = () => { closeDialog(); if (back && document.body.contains(back)) back.focus(); };
-  $("howto-close").addEventListener("click", close);
-  $("howto-backdrop").addEventListener("click", e => { if (e.target.id === "howto-backdrop") close(); });
+  $("howto-close").addEventListener("click", closeDialog);
+  $("howto-backdrop").addEventListener("click", e => { if (e.target.id === "howto-backdrop") closeDialog(); });
 }
 
 const PASS_SCORE = 4;      // 80% of 5
@@ -1350,6 +1378,7 @@ function applyComfort() {
     el.classList.toggle("font-sans", comfort.font === "sans");
     el.classList.toggle("spacing-wide", comfort.spacing === "wide");
   });
+  syncHeaderHeight();
 }
 
 // ---------------------------------------------------------------------------
@@ -1633,7 +1662,7 @@ function renderParagraph(text, interactive) {
   while ((m = re.exec(text)) !== null) {
     out += esc(text.slice(last, m.index));
     if (interactive) {
-      out += `<span class="vocab" role="button" tabindex="0" data-w="${esc(m[1])}" data-en="${esc(m[2])}" data-no="${esc(m[3])}">${esc(m[1])}</span>`;
+      out += `<span class="vocab" role="button" tabindex="0" aria-expanded="false" data-w="${esc(m[1])}" data-en="${esc(m[2])}" data-no="${esc(m[3])}">${esc(m[1])}</span>`;
     } else {
       out += esc(m[1]);
     }
@@ -1685,8 +1714,8 @@ function choiceCard(c) {
   const stepTag = c.tag === "harder" ? '<span class="step-tag">A bit harder</span>' : c.tag === "easier" ? '<span class="step-tag">A bit easier</span>'
     : c.tag === "practice" ? '<span class="step-tag">Practice: read again</span>' : "";
   return `
-    <button type="button" class="choice-card" data-start="${esc(t.id)}" style="--topic:${topicOf(t).color}">
-      <span class="meta">${topicChip(t)}${levelTag(t.level)}<span class="tag" title="${wordCount(t)} words, with questions">About ${textMinutes(t)} min</span>${stepTag}</span>
+    <button type="button" class="choice-card" data-start="${esc(t.id)}" style="--topic:${topicOf(t).color}" aria-label="Start reading: ${esc(t.title)}" aria-describedby="meta-${esc(t.id)}">
+      <span class="meta" id="meta-${esc(t.id)}">${topicChip(t)}${levelTag(t.level)}<span class="tag" title="${wordCount(t)} words, with questions">About ${textMinutes(t)} min</span>${stepTag}</span>
       <h3>${esc(t.title)}</h3>
       <p>${esc(teaser)}</p>
       <span class="go">Start reading</span>
@@ -1750,6 +1779,33 @@ function go(name) {
   hideRouteTips();
   render();
   window.scrollTo({ top: 0, behavior: "auto" });
+  focusMain();
+}
+// The tab title names the screen, so a screen reader and the browser history say where the student is.
+function screenTitle() {
+  const suffix = " | Word Summit";
+  if (loadProblem === "damaged") return "Saved progress problem" + suffix;
+  if (!state.level && !state.placement) return "Welcome" + suffix;
+  const t = state.active && findText(state.active.id);
+  switch (screen) {
+    case "read": return (t ? "Reading: " + t.title : "Reading") + suffix;
+    case "questions": return (t ? "Questions: " + t.title : "Questions") + suffix;
+    case "result": return "Your result" + suffix;
+    case "achievements": return "Achievements" + suffix;
+    case "report": return "My report" + suffix;
+    case "vault": return "Your Vault" + suffix;
+    case "quiz": return "Vault practice" + suffix;
+    case "quiz-done": return "Vault practice result" + suffix;
+    case "placement-next": case "placement-done": return "Reading test" + suffix;
+    default: return (placing() ? "Reading test" : "Choose your next text") + suffix;
+  }
+}
+// After a screen change, move focus to the screen's main heading (called from go() only, so typing, theme changes and resizes never move it).
+function focusMain() {
+  const app = $("app");
+  const target = app.querySelector("h1") || app.querySelector("h2") || app;
+  if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+  target.focus({ preventScroll: true });
 }
 function render() {
   stopReadingTimer();
@@ -1757,8 +1813,8 @@ function render() {
   renderHeader();
   renderBanners();
   const app = $("app");
-  if (loadProblem === "damaged") { app.innerHTML = viewDamaged(); bindDamaged(); return; }
-  if (!state.level && !state.placement) { app.innerHTML = viewWelcome(); bindWelcome(); return; }
+  if (loadProblem === "damaged") { app.innerHTML = viewDamaged(); bindDamaged(); document.title = screenTitle(); return; }
+  if (!state.level && !state.placement) { app.innerHTML = viewWelcome(); bindWelcome(); document.title = screenTitle(); return; }
   if (placing() && !["read", "questions", "placement-next"].includes(screen)) screen = "home";
   if (screen === "placement-done" && !(state.placement && state.placement.done && state.level)) screen = "home";
   if ((screen === "read" || screen === "questions") && !state.active) screen = "home";
@@ -1785,8 +1841,10 @@ function render() {
       ensureChoices(); app.innerHTML = viewHome(); bindHome(); break;
   }
   document.querySelectorAll("#app [data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
+  document.title = screenTitle();
   applyComfort();
   renderTester();
+  fitRouteHits();
   animateRoutes();
 }
 // Level-up: the gold line draws itself (about 1 s), then the beacon flares once. Skipped with reduced motion.
@@ -1809,11 +1867,11 @@ function renderHeader() {
   const vslot = $("vault-slot");
   if (state.level && !loadProblem) {
     const ready = state.savedWords.length >= VAULT_UNLOCK ? readyToPractise().length : 0;
-    vslot.innerHTML = `<button type="button" class="icon-btn" id="btn-vault" title="Your saved words">
+    vslot.innerHTML = `<button type="button" class="icon-btn" id="btn-vault" title="Your saved words" aria-label="Vault${ready ? `, ${ready} word${ready === 1 ? "" : "s"} to practise` : ""}">
       ${icon("bookmark")}
-      <span class="lbl">Vault</span>${ready ? `<span class="count-badge" aria-label="${ready} words to practise">${ready}</span>` : ""}</button>
-      <button type="button" class="icon-btn" id="btn-ach" title="Achievements">${achIcon("trophy")}<span class="lbl">Achievements</span></button>
-      <button type="button" class="icon-btn" id="btn-report" title="My report">${achIcon("report")}<span class="lbl">My Report</span></button>`;
+      <span class="lbl">Vault</span>${ready ? `<span class="count-badge" aria-hidden="true">${ready}</span>` : ""}</button>
+      <button type="button" class="icon-btn" id="btn-ach" title="Achievements" aria-label="Achievements">${achIcon("trophy")}<span class="lbl">Achievements</span></button>
+      <button type="button" class="icon-btn" id="btn-report" title="My report" aria-label="My report">${achIcon("report")}<span class="lbl">My report</span></button>`;
     $("btn-vault").addEventListener("click", () => go("vault"));
     $("btn-ach").addEventListener("click", () => go("achievements"));
     $("btn-report").addEventListener("click", () => go("report"));
@@ -1821,15 +1879,23 @@ function renderHeader() {
     vslot.innerHTML = "";
   }
   if (!loadProblem && placing()) {
-    slot.innerHTML = `<span class="level-pill">Reading test · text ${placementTextNumber()}</span>`;
+    slot.innerHTML = `<span class="level-pill" role="img" aria-label="Reading test, text ${placementTextNumber()}">Reading test · text ${placementTextNumber()}</span>`;
+    syncHeaderHeight();
     return;
   }
-  if (!state.level || loadProblem) { slot.innerHTML = ""; return; }
+  if (!state.level || loadProblem) { slot.innerHTML = ""; syncHeaderHeight(); return; }
   const p = progressInfo();
   const L = state.level;
   const hint = isBridge(L) ? `${L} means “almost ${LADDER[levelIdx(L) + 1]}”` : (LEVEL_INFO[L] || {}).title;
   const segs = L === "C2" ? "" : segBar(p.done, p.target, "segs");
-  slot.innerHTML = `<span class="level-pill" title="${esc(hint)}">${esc(L)}${segs}<span class="pill-count">${esc(p.short)}</span></span>`;
+  const spoken = L === "C2" ? `Level C2: ${state.passes[L] || 0} texts passed` : `Level ${L}: ${p.done} of ${p.target} texts passed`;
+  slot.innerHTML = `<span class="level-pill" role="img" title="${esc(hint)}" aria-label="${esc(spoken)}">${esc(L)}${segs}<span class="pill-count">${esc(p.short)}</span></span>`;
+  syncHeaderHeight();
+}
+// The header is sticky, so tell the browser how tall it is: a focused item is then never left hidden underneath it.
+function syncHeaderHeight() {
+  const h = document.querySelector(".topbar");
+  if (h) document.documentElement.style.scrollPaddingTop = `${Math.round(h.getBoundingClientRect().height) + 8}px`;
 }
 
 let newestSeen = null;
@@ -1888,20 +1954,21 @@ function viewWelcome() {
       </div>
       <div class="welcome-form">
         <div class="name-box">
-          <label class="field-label" for="name-input">Your first name <span class="muted" style="font-weight:400;">(you can skip this)</span></label>
-          <input class="field" id="name-input" type="text" maxlength="30" autocomplete="off" placeholder="For example: Emil" value="${esc(state.name)}" style="margin-bottom:0.5rem;">
+          <label class="field-label" for="name-input">Your first name</label>
+          <input class="field" id="name-input" type="text" maxlength="30" autocomplete="off" aria-describedby="name-hint" value="${esc(state.name)}" style="margin-bottom:0.5rem;">
+          <p class="small muted" id="name-hint">For example: Emil. You can skip this.</p>
           <p class="small muted">It's only saved in this browser, and shown on your report.</p>
         </div>
         <div class="first-test">
-          <h3>First: a short reading test</h3>
+          <h2>First: a short reading test</h2>
           <p>You read 2 or 3 texts and answer the questions. This finds the right level for you. It takes about 10 minutes, and you can stop and continue later. The first text may feel hard. That is fine: just do your best.</p>
         </div>
         <button type="button" class="btn btn-primary" id="btn-begin">Start the reading test</button>
       </div>
       <div class="steps">
-        <div class="step"><div class="step-num">1</div><h3>Read a text</h3><p>Click a <strong>dotted word</strong> to see what it means in English and Norwegian.</p></div>
-        <div class="step"><div class="step-num">2</div><h3>Answer 5 questions</h3><p>Wrong the first time? Look at the text again and try once more.</p></div>
-        <div class="step"><div class="step-num">3</div><h3>Move up</h3><p>Pass texts to reach the next level on the route.</p></div>
+        <div class="step"><div class="step-num">1</div><h2>Read a text</h2><p>Tap or click a <strong>dotted word</strong> to see what it means in English and Norwegian.</p></div>
+        <div class="step"><div class="step-num">2</div><h2>Answer 5 questions</h2><p>Wrong the first time? Look at the text again and try once more.</p></div>
+        <div class="step"><div class="step-num">3</div><h2>Move up</h2><p>Pass texts to reach the next level on the route.</p></div>
       </div>
       ${TEST_MODE ? `<div class="test-note"><strong>Test version.</strong> Use the Tester panel (bottom right) to fake scores and try each placement path, or use “Set level” to skip the test.</div>` : ""}
     </section>`;
@@ -1947,7 +2014,7 @@ function viewPlacementHome() {
   }
   return `
     <section class="home-grid">
-      <div class="hello">${hello}</div>
+      <h1 class="hello">${hello}</h1>
       <div class="card welcome placement-card">${placementTrack()}${body}</div>
     </section>`;
 }
@@ -2128,13 +2195,32 @@ function routeSvg(opts = {}) {
       if (!shown(i)) return;
       const top = i === 10 ? 12 : 18;
       s += `<g class="lvl" tabindex="${i === stop ? 0 : -1}" role="button" data-i="${i}" data-cur="${cur}" data-high="${hi}" aria-label="${esc(LADDER[i])}, ${esc(LEVEL_TIPS[LADDER[i]][0])}">
-        <rect class="hit" x="${p[0] - 24}" y="${p[1] - top}" width="48" height="${36 + top}" rx="10"/><rect class="ring" x="${p[0] - 22}" y="${p[1] - top + 2}" width="44" height="${32 + top}" rx="10"/></g>`;
+        <rect class="hit" x="${p[0] - 24}" y="${p[1] - top}" width="48" height="${36 + top}" rx="10"/><rect class="ring-halo" x="${p[0] - 22}" y="${p[1] - top + 2}" width="44" height="${32 + top}" rx="10"/><rect class="ring" x="${p[0] - 22}" y="${p[1] - top + 2}" width="44" height="${32 + top}" rx="10"/></g>`;
     });
-    if (shown(10)) s += `<g class="beacon-btn" tabindex="0" role="button" aria-label="beacon: varde (vardebål)" aria-expanded="false" aria-controls="beacon-pop" data-lit="${lit}">
-      ${side ? `<rect class="hit" x="860" y="-88" width="94" height="117" rx="14"/><rect class="ring" x="864" y="-85" width="86" height="111" rx="13"/>`
-        : `<rect class="hit" x="881" y="-44" width="52" height="78" rx="10"/><rect class="ring" x="883" y="-42" width="48" height="74" rx="10"/>`}</g>`;
+    if (shown(10)) s += `<g class="beacon-btn" tabindex="0" role="button" aria-label="About the beacon (varde)" aria-expanded="false" aria-controls="beacon-pop" data-lit="${lit}">
+      ${side ? `<rect class="hit" x="860" y="-88" width="94" height="117" rx="14"/><rect class="ring-halo" x="864" y="-85" width="86" height="111" rx="13"/><rect class="ring" x="864" y="-85" width="86" height="111" rx="13"/>`
+        : `<rect class="hit" x="881" y="-44" width="52" height="78" rx="10"/><rect class="ring-halo" x="883" y="-42" width="48" height="74" rx="10"/><rect class="ring" x="883" y="-42" width="48" height="74" rx="10"/>`}</g>`;
   }
-  return s + "</svg>";
+  // the drawn labels repeat what the level buttons already say, so a screen reader skips them
+  return (s + "</svg>").replace(/<text(?![^>]*aria-hidden)/g, '<text aria-hidden="true"');
+}
+// On a phone the mountain is small, so grow each tap area (upwards and sideways, never past its neighbour) to 24 px once its real size is known.
+function fitRouteHits() {
+  document.querySelectorAll("svg.route.phone").forEach(svg => {
+    const ppu = svg.getBoundingClientRect().width / svg.viewBox.baseVal.width;
+    if (!ppu) return;
+    const need = Math.ceil(24.5 / ppu);
+    svg.querySelectorAll(".lvl, .beacon-btn").forEach(g => {
+      const hit = g.querySelector(".hit");
+      const x = +hit.getAttribute("x"), y = +hit.getAttribute("y"), w = +hit.getAttribute("width"), h = +hit.getAttribute("height");
+      const nw = Math.max(w, Math.min(g.classList.contains("lvl") ? 86 : 999, need)), nh = Math.max(h, need);
+      const nx = x - (nw - w) / 2, ny = y - (nh - h);
+      hit.setAttribute("x", nx); hit.setAttribute("width", nw); hit.setAttribute("y", ny); hit.setAttribute("height", nh);
+      g.querySelectorAll(".ring, .ring-halo").forEach(r => {
+        r.setAttribute("x", nx + 2); r.setAttribute("width", nw - 4); r.setAttribute("y", ny + 2); r.setAttribute("height", nh - 4);
+      });
+    });
+  });
 }
 function segBar(done, total, cls = "segbar") {
   let out = "";
@@ -2236,7 +2322,7 @@ function viewHome() {
   const browser = browserName();
   return `
     <section class="home-grid">
-      <div class="hello">${hello}</div>
+      <h1 class="hello">${hello}</h1>
       ${levelCard()}
       ${main}
       ${nudge}
@@ -2282,7 +2368,7 @@ function minReadMs(t) {
 }
 function viewRead() {
   const t = findText(state.active.id);
-  const help = `<span class="help-pill">Click a <span class="sample">dotted word</span> for help</span>`;
+  const help = `<span class="help-pill">Tap a <span class="sample">dotted word</span> to see what it means</span>`;
   return `
     <section class="topic-frame" style="--topic:${topicOf(t).color}">
       <article class="card reader-card">
@@ -2293,10 +2379,10 @@ function viewRead() {
         <div class="text-body" id="text-body">${renderTextBody(t, true)}</div>
         <div id="end-sentinel" aria-hidden="true" style="height:1px;"></div>
         <div class="finish-zone">
-          <button type="button" class="btn btn-primary btn-finish" id="btn-finished" disabled>
+          <button type="button" class="btn btn-primary btn-finish" id="btn-finished" aria-disabled="true">
             <span class="fill" id="finish-fill"></span><span class="lbl">Finished reading</span>
           </button>
-          <p class="finish-help" id="finish-help">Read to the end of the text.</p>
+          <p class="finish-help" id="finish-help" role="status">Read to the end of the text.</p>
         </div>
       </article>
     </section>`;
@@ -2320,7 +2406,7 @@ function bindRead() {
     const timeOK = testerSkipWait || readElapsed >= need;
     fill.style.width = `${Math.min(100, (readElapsed / need) * 100)}%`;
     if (readScrolledEnd && timeOK) {
-      btn.disabled = false;
+      btn.removeAttribute("aria-disabled");
       help.textContent = "Ready? The questions come next.";
       stopReadingTimer();
     } else if (!readScrolledEnd) {
@@ -2337,7 +2423,7 @@ function bindRead() {
   update();
 
   btn.addEventListener("click", () => {
-    if (btn.disabled) return;
+    if (btn.getAttribute("aria-disabled") === "true") return;
     state.active.phase = "questions";
     save();
     go("questions");
@@ -2402,7 +2488,7 @@ function showBeaconPop(g, pin) {
   pop.innerHTML = `<button type="button" class="x" id="beacon-x" aria-label="Close">${icon("x")}</button>
     <div class="w">beacon</div>
     <div class="line"><span class="lang">EN</span>A fire on top of a pile of stones on a mountain. Long ago, people lit beacons to send a message from one mountain to the next.</div>
-    <div class="line no"><span class="lang">NO</span>varde (vardebål)</div>
+    <div class="line no"><span class="lang">NO</span><span lang="nb">varde (vardebål)</span></div>
     <div class="saved beacon-here">${esc(here)}</div>`;
   $("beacon-x").addEventListener("click", e => { e.stopPropagation(); const back = beaconFor; hideBeaconPop(); if (back) back.focus(); });
   placePop(pop, g, false);
@@ -2481,6 +2567,7 @@ function showVocab(el) {
   hideVocab();
   openVocabEl = el;
   el.classList.add("open");
+  el.setAttribute("aria-expanded", "true");
   const { w, en, no } = el.dataset;
   const t = state.active ? findText(state.active.id) : null;
   let status = "";
@@ -2502,8 +2589,9 @@ function showVocab(el) {
     <button type="button" class="x" id="vocab-x" aria-label="Close">${icon("x")}</button>
     <div class="w">${esc(w)}</div>
     <div class="line"><span class="lang">EN</span>${esc(en)}</div>
-    <div class="line no"><span class="lang">NO</span>${esc(no)}</div>
+    <div class="line no"><span class="lang">NO</span><span lang="nb">${esc(no)}</span></div>
     <div class="saved">${status}</div>`;
+  pop.setAttribute("aria-label", "Meaning of " + w);
   pop.style.setProperty("--topic", t ? topicOf(t).color : "var(--primary)");
   pop.classList.remove("hidden");
   const r = el.getBoundingClientRect();
@@ -2515,11 +2603,11 @@ function showVocab(el) {
   if (r.bottom + h + 16 > window.innerHeight) top = r.top + window.scrollY - h - 8;
   pop.style.left = `${left}px`;
   pop.style.top = `${top}px`;
-  $("vocab-x").addEventListener("click", hideVocab);
+  $("vocab-x").addEventListener("click", () => { const back = openVocabEl; hideVocab(); if (back) back.focus({ preventScroll: true }); });
 }
 function hideVocab() {
   $("vocab-pop").classList.add("hidden");
-  if (openVocabEl) openVocabEl.classList.remove("open");
+  if (openVocabEl) { openVocabEl.classList.remove("open"); openVocabEl.setAttribute("aria-expanded", "false"); }
   openVocabEl = null;
 }
 
@@ -2543,7 +2631,7 @@ function viewQuestions() {
         <h1 class="text-title">${esc(t.title)}</h1>
         <div class="text-body" id="text-body">${renderTextBody(t, false)}</div>
       </article>
-      <aside class="card q-panel" id="q-panel" aria-live="polite"></aside>
+      <aside class="card q-panel" id="q-panel"></aside>
     </section>`;
 }
 function bindQuestions() {
@@ -2552,7 +2640,8 @@ function bindQuestions() {
   const a = state.active;
   if (a && a.answered && (a.results[a.q] ?? 1) < 1) highlightClue({ quiet: true });
 }
-function renderQuestion() {
+// focusIt: move focus to the feedback (or the new question) after the student has acted; never on the first draw of a screen.
+function renderQuestion(focusIt = false) {
   const a = state.active;
   const t = findText(a.id);
   const qi = a.q;
@@ -2597,8 +2686,8 @@ function renderQuestion() {
     const cls = pts === 1 ? "good" : pts === 0.5 ? "half" : "bad";
     const title = pts === 1 ? "Correct! +1 point" : pts === 0.5 ? "Correct on the second try. +½ point" : "Not this time. The right answer is in green.";
     feedback = `
-      <div class="feedback ${cls}">
-        <h4>${title}</h4>
+      <div class="feedback ${cls}" role="status" tabindex="-1">
+        <h3>${title}</h3>
         ${isHardest && pts === 1 ? '<p class="praise">You got your hardest question type right!</p>' : ""}
         <p>${esc(q.explanation)}</p>
         <div class="actions">
@@ -2607,10 +2696,11 @@ function renderQuestion() {
       </div>`;
   } else if (a.attempts === 1) {
     feedback = `
-      <div class="feedback hint">
-        <h4>Not quite. Try once more for ½ point.</h4>
+      <div class="feedback hint" role="status" tabindex="-1">
+        <h3>Not quite. Try once more for ½ point.</h3>
         <p class="tip"><strong>Tip:</strong> ${esc(SKILL_TIPS[q.skill] || "")}</p>
         <p>Read ${esc(where)} again, then choose another answer.</p>
+        ${retryLocked() ? '<p class="wait-note" id="retry-wait">Read the tip first. The answers open in a moment.</p>' : ""}
         <div class="actions">
           <button type="button" class="btn btn-secondary btn-block" id="btn-clue">Highlight the clue <kbd>H</kbd></button>
         </div>
@@ -2623,7 +2713,7 @@ function renderQuestion() {
       <span class="skill-chip">${esc(SKILL_LABELS[q.skill] || q.skill)}</span>${t.placement ? "" : howToButton(q.skill)}
     </div>
     ${focusTip}
-    <div class="q-prompt">${esc(q.prompt)}</div>
+    <h2 class="q-prompt" tabindex="-1">${esc(q.prompt)}</h2>
     <div class="options${!a.answered && retryLocked() ? " waiting" : ""}">${opts}</div>
     ${feedback}
     <div class="kbd-hint">Keys: <kbd>1</kbd>–<kbd>4</kbd> or <kbd>A</kbd>–<kbd>D</kbd> to answer · <kbd>Enter</kbd> to go on</div>`;
@@ -2632,7 +2722,7 @@ function renderQuestion() {
     b.addEventListener("click", () => answer(parseInt(b.dataset.orig, 10)));
   });
   const next = $("btn-next");
-  if (next) { next.addEventListener("click", nextQuestion); next.focus({ preventScroll: true }); }
+  if (next) next.addEventListener("click", nextQuestion);
   const clue = $("btn-clue");
   if (clue) clue.addEventListener("click", highlightClue);
   // keep the hint or the Next button in view inside the question panel
@@ -2640,6 +2730,10 @@ function renderQuestion() {
   const target = next || clue;
   if (target) target.scrollIntoView({ block: "nearest" });
   else if (panel) panel.scrollTop = 0;
+  if (focusIt) {
+    const fb = document.querySelector("#q-panel .feedback") || document.querySelector("#q-panel .q-prompt");
+    if (fb) fb.focus({ preventScroll: true });
+  }
 }
 function answer(orig) {
   const a = state.active;
@@ -2658,7 +2752,7 @@ function answer(orig) {
     retryLockUntil = Date.now() + RETRY_WAIT_MS;
     clearTimeout(retryTimer);
     if (RETRY_WAIT_MS > 0) retryTimer = setTimeout(unlockRetry, RETRY_WAIT_MS + 20);
-    renderQuestion();
+    renderQuestion(true);
   } else {
     finishQuestion(0, orig);
   }
@@ -2673,6 +2767,8 @@ function unlockRetry() {
   });
   const box = document.querySelector("#q-panel .options");
   if (box) box.classList.remove("waiting");
+  const note = $("retry-wait");
+  if (note) note.remove();
 }
 function finishQuestion(points, orig) {
   const a = state.active;
@@ -2684,7 +2780,7 @@ function finishQuestion(points, orig) {
   a.answered = true;
   a.chosen = orig;
   save();
-  renderQuestion();
+  renderQuestion(true);
   if (points < 1) highlightClue({ quiet: true });
 }
 function nextQuestion() {
@@ -2699,7 +2795,7 @@ function nextQuestion() {
   a.chosen = null;
   a.answered = false;
   save();
-  renderQuestion();
+  renderQuestion(true);
   const panel = $("q-panel");
   if (panel && panel.getBoundingClientRect().top < 60) panel.scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -2771,7 +2867,7 @@ function hardestSkillNote() {
   const k = hardestSkill();
   if (!k) return "";
   return `<div class="card hardest-skill">${icon("lightbulb")}
-    <span><strong>Your hardest skill lately: ${esc(SKILL_LABELS[k] || k)}.</strong> Tip: ${esc(SKILL_TIPS[k] || "")}</span>${howToButton(k)}</div>`;
+    <span><strong>Your focus now: ${esc(SKILL_LABELS[k] || k)}.</strong> Tip: ${esc(SKILL_TIPS[k] || "")}</span>${howToButton(k)}</div>`;
 }
 
 // ---------------------------------------------------------------------------
@@ -2784,7 +2880,7 @@ function viewResult() {
   const heading = r.practice ? "Practice done" : passed ? (r.score === 5 ? "Perfect! You passed." : "Well done! You passed.") : (r.score >= STRUGGLE_SCORE ? "Good try!" : "This one was tough.");
   const skillPts = (t ? t.questions : []).map((q, i) => {
     const v = r.results[i] || 0;
-    return `<span class="skill-pt ${v === 1 ? "full" : v === 0.5 ? "half" : "zero"}">${v === 1 ? "" : `<b>${fmtPts(v)}</b>`}${esc(SKILL_LABELS[q.skill] || q.skill)}<span class="sr-only">: ${fmtPts(v)} of 1 point</span></span>`;
+    return `<span class="skill-pt ${v === 1 ? "full" : v === 0.5 ? "half" : "zero"}">${v === 1 ? "" : `<b aria-hidden="true">${v === 0 ? "\u2717" : fmtPts(v)}</b>`}${esc(SKILL_LABELS[q.skill] || q.skill)}<span class="sr-only">: ${fmtPts(v)} of 1 point</span></span>`;
   }).join("");
 
   let msg = "";
@@ -2832,7 +2928,7 @@ function viewResult() {
           <p class="muted">${t ? esc(t.title) : ""}</p>
           <div class="skill-row">${skillPts}</div>
           ${msg ? `<div class="level-msg">${msg}</div>` : ""}
-          ${(state.choices || []).some(c => findText(c.id)) ? '<button type="button" class="btn btn-primary btn-to-choices" id="btn-to-choices">Choose your next text</button>' : ""}
+          ${(state.choices || []).some(c => findText(c.id)) ? '<button type="button" class="btn btn-primary btn-to-choices" id="btn-to-choices">See your next texts</button>' : ""}
         </div>
       </div>
       ${bigCard}
@@ -2999,7 +3095,7 @@ function answerQuiz(pos) {
   quiz.log.push(w ? applyQuizAnswer(w, pos === q.correct) : { word: q.key, correct: pos === q.correct, before: "new", after: "new", note: "" });
   freshAch = freshAch.concat(checkAchievements());
   renderHeader();
-  renderQuiz();
+  renderQuiz(true);
 }
 function nextQuiz() {
   if (!quiz || !quiz.answered) return;
@@ -3007,7 +3103,7 @@ function nextQuiz() {
   quiz.i += 1;
   quiz.answered = false;
   quiz.chosen = null;
-  renderQuiz();
+  renderQuiz(true);
 }
 
 function stageDots(w) {
@@ -3045,7 +3141,7 @@ function viewVault() {
             <div class="word-row" data-key="${esc(wordKey(w))}">
               <div class="word-main">
                 <div class="word-w">${esc(w.word)} ${stageDots(w)}</div>
-                <div class="word-def"><span class="lang">EN</span>${esc(w.en)} <span class="no"><span class="lang">NO</span>${esc(w.no)}</span></div>
+                <div class="word-def"><span class="lang">EN</span>${esc(w.en)} <span class="no"><span class="lang">NO</span><span lang="nb">${esc(w.no)}</span></span></div>
                 ${t ? `<div class="word-src">From: ${esc(t.placement ? "your reading test" : t.title)}</div>` : ""}
               </div>
               <div class="word-actions"><button type="button" class="btn-link remove-link" data-remove="${esc(wordKey(w))}">Remove</button></div>
@@ -3094,9 +3190,10 @@ function bindVault() {
 }
 
 function viewQuiz() {
-  return `<section class="card quiz-card" id="quiz-card" aria-live="polite"></section>`;
+  return `<section class="card quiz-card" id="quiz-card"></section>`;
 }
-function renderQuiz() {
+// focusIt: after an answer focus goes to the feedback, after "Next word" to the new prompt; never on the first draw (go() does that).
+function renderQuiz(focusIt = false) {
   const card = $("quiz-card");
   if (!card || !quiz) return;
   const q = quiz.qs[quiz.i];
@@ -3123,9 +3220,9 @@ function renderQuiz() {
     const r = quiz.log[quiz.i];
     const last = quiz.i + 1 >= quiz.qs.length;
     feedback = `
-      <div class="feedback ${r.correct ? "good" : "bad"}">
-        <h4>${r.correct ? "Correct!" : `Not quite. The answer is “${esc(q.options[q.correct])}”.`}</h4>
-        <p><strong>${esc(w.word)}</strong>: ${esc(w.en)}<br><span class="lang">NO</span><em>${esc(w.no)}</em></p>
+      <div class="feedback ${r.correct ? "good" : "bad"}" role="status" tabindex="-1">
+        <h3>${r.correct ? "Correct!" : `Not quite. The answer is “${esc(q.options[q.correct])}”.`}</h3>
+        <p><strong>${esc(w.word)}</strong>: ${esc(w.en)}<br><span class="lang">NO</span><em lang="nb">${esc(w.no)}</em></p>
         <p class="small">${esc(r.note)}</p>
         <div class="actions"><button type="button" class="btn btn-primary btn-block" id="btn-quiz-next">${last ? "See your result" : "Next word"}</button></div>
       </div>`;
@@ -3136,13 +3233,14 @@ function renderQuiz() {
       <span class="skill-chip">${QUIZ_TYPE_LABELS[q.type]}</span>
     </div>
     <div class="q-dots" aria-hidden="true">${dots}</div>
-    <div class="q-prompt">${prompt}</div>
+    <h2 class="q-prompt" tabindex="-1">${prompt}</h2>
     <div class="options">${opts}</div>
     ${feedback}
     <div class="kbd-hint">Keys: <kbd>1</kbd>–<kbd>4</kbd> or <kbd>A</kbd>–<kbd>D</kbd> to answer · <kbd>Enter</kbd> to go on</div>`;
   card.querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => answerQuiz(parseInt(b.dataset.pos, 10))));
   const nx = $("btn-quiz-next");
-  if (nx) { nx.addEventListener("click", nextQuiz); nx.focus({ preventScroll: true }); }
+  if (nx) nx.addEventListener("click", nextQuiz);
+  if (focusIt) (card.querySelector(".feedback") || card.querySelector(".q-prompt")).focus({ preventScroll: true });
 }
 
 function viewQuizDone() {
@@ -3218,6 +3316,11 @@ const SKILL_BADGES = {
   "Main Idea": { name: "Big Picture", slug: "mainidea" }
 };
 const RANK_WINDOW = 10;
+// "Your last 10 questions of each type: Bronze = 6 right, Silver = 7½, Gold = 9." Built from TIERS and RANK_WINDOW so it stays true.
+function ranksLine() {
+  const parts = TIERS.map((t, i) => `${t.label} = ${fmtPts(Math.round(t.min * RANK_WINDOW * 2) / 2)}${i === 0 ? " right" : ""}`);
+  return `Your last ${RANK_WINDOW} questions of each type: ${parts.join(", ")}.`;
+}
 
 const achIcon = (name, cls = "ic", earned = false) => icon(name, cls, earned ? ICON_DUO : ICON_PATHS);
 
@@ -3393,9 +3496,9 @@ function skillCard(skill) {
   return `
     <div class="badge-card skill ${best >= 0 ? `earned ${tierCls}` : ""}">
       <div class="badge-icon${best >= 0 ? ` medal ${tierCls}` : ""}">${achIcon("medal", "ic", best >= 0)}</div>
-      <div class="badge-name">${esc(SKILL_BADGES[skill].name)}</div>
-      <div class="badge-tier">${best >= 0 ? TIERS[best].label : "No rank yet"}</div>
-      <div class="badge-desc">${esc(SKILL_LABELS[skill])} ${howToButton(skill)}</div>
+      <div class="badge-name">${esc(SKILL_LABELS[skill])}</div>
+      <div class="badge-tier">${esc(SKILL_BADGES[skill].name)}: ${best >= 0 ? TIERS[best].label : "No rank yet"}</div>
+      <div class="badge-desc">${howToButton(skill)}</div>
       <div class="badge-foot"><span class="badge-date">${esc(line)}</span></div>
     </div>`;
 }
@@ -3425,12 +3528,12 @@ function viewAchievements() {
         <div style="flex:1; min-width:0;">
           <h1>Achievements</h1>
           <p class="muted">Badges you earn are yours to keep.</p>
-          <h3 class="journey-title">Your level journey</h3>
+          <h2 class="journey-title">Your level journey</h2>
           ${state.level ? `<div class="journey-route">${routeSvg({ level: state.level, highest: state.highestLevel, caption: "You are here", label: `Your route. You are at ${state.level}.` })}${ROUTE_HINT}</div>` : ""}
           ${levelJourney() || '<p class="muted small">Your levels will appear here.</p>'}
         </div>
       </div>
-      <div><h2 class="section-title">Skill ranks</h2><p class="muted small group-help">Ranks use your last ${RANK_WINDOW} questions of each type: Bronze 60%, Silver 75%, Gold 90%.</p>
+      <div><h2 class="section-title">Skill ranks</h2><p class="muted small group-help">${esc(ranksLine())}</p>
         <div class="badge-grid">${earnedFirst(SKILLS, k => bestTierIndex(k) >= 0).map(skillCard).join("")}</div></div>
       <div><h2 class="section-title">Milestones</h2><div class="badge-grid">${group("milestones")}</div></div>
       <div><h2 class="section-title">Explorer</h2><div class="badge-grid">${group("explorer")}</div></div>
@@ -3521,7 +3624,7 @@ function viewReport() {
         <div class="report-top">
           <div>
             <div class="report-kicker">Word Summit reading report</div>
-            <h1>${state.name ? esc(state.name) : "Your report"}</h1>
+            <h1>${state.name ? esc(state.name) : "My report"}</h1>
             <p class="muted">${esc(today())}</p>
           </div>
           <div class="level-badge"><svg class="route" viewBox="0 0 120 56" aria-hidden="true"><polyline class="r-done" points="6,48 26,42 46,36 66,26"/><polyline class="r-todo" points="66,26 86,18 106,8" style="stroke-dasharray:2 7;stroke-width:2.5"/><circle class="r-here" cx="66" cy="26" r="7" style="stroke-width:4"/></svg><span><small>Level</small><strong>${esc(state.level)}</strong></span></div>
@@ -3731,6 +3834,8 @@ function renderSettings() {
       lsSet(COMFORT_KEY, JSON.stringify(comfort));
       applyComfort();
       renderSettings();
+      const again = $("settings").querySelector(`[data-k="${b.dataset.k}"][data-v="${b.dataset.v}"]`);
+      if (again) again.focus({ preventScroll: true });
     });
   });
   const reset = $("btn-reset");
@@ -3739,9 +3844,16 @@ function renderSettings() {
 function toggleSettings(force) {
   const panel = $("settings");
   const open = force !== undefined ? force : panel.classList.contains("hidden");
+  const hadFocus = panel.contains(document.activeElement);
   if (open) renderSettings();
   panel.classList.toggle("hidden", !open);
   $("btn-settings").setAttribute("aria-expanded", String(open));
+  if (open) {
+    const first = panel.querySelector("button.on") || panel.querySelector("button");
+    if (first) first.focus({ preventScroll: true });
+  } else if (hadFocus) {
+    $("btn-settings").focus({ preventScroll: true });
+  }
 }
 function openResetDialog() {
   $("dialog-root").innerHTML = `
@@ -3759,6 +3871,7 @@ function openResetDialog() {
     </div>`;
   const input = $("reset-input");
   const ok = $("reset-ok");
+  dialogReturn = () => $("btn-settings").focus({ preventScroll: true });
   input.focus();
   input.addEventListener("input", () => { ok.disabled = input.value.trim().toUpperCase() !== "RESET"; });
   $("reset-cancel").addEventListener("click", closeDialog);
@@ -3770,7 +3883,12 @@ function openResetDialog() {
     go("home");
   });
 }
-function closeDialog() { $("dialog-root").innerHTML = ""; }
+function closeDialog() {
+  const back = dialogReturn; dialogReturn = null;
+  const wasOpen = $("dialog-root").innerHTML !== "";
+  $("dialog-root").innerHTML = "";
+  if (wasOpen && back) back();
+}
 
 // ---------------------------------------------------------------------------
 // Tester panel (test builds only)
@@ -3930,6 +4048,19 @@ function renderTester() {
 // ---------------------------------------------------------------------------
 function onKey(e) {
   if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === "Tab") {
+    // a dialog is modal: Tab and Shift+Tab go round inside it
+    const d = document.querySelector("#dialog-root [role='dialog']");
+    if (d) {
+      const items = [...d.querySelectorAll("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])")].filter(x => !x.disabled && x.offsetParent !== null);
+      if (items.length) {
+        const i = items.indexOf(document.activeElement);
+        const next = e.shiftKey ? (i <= 0 ? items.length - 1 : i - 1) : (i < 0 || i === items.length - 1 ? 0 : i + 1);
+        e.preventDefault(); items[next].focus();
+      }
+    }
+    return;
+  }
   if (e.key === "Escape") { hideVocab(); toggleSettings(false); closeDialog(); return; }
   const tag = (document.activeElement && document.activeElement.tagName) || "";
   if (["INPUT", "TEXTAREA", "SELECT"].includes(tag)) return;
@@ -4016,7 +4147,7 @@ function init() {
     const panel = $("settings");
     if (!panel.classList.contains("hidden") && !panel.contains(e.target) && e.target.id !== "btn-settings") toggleSettings(false);
   });
-  window.addEventListener("resize", () => { hideVocab(); hideRouteTips(); });
+  window.addEventListener("resize", () => { hideVocab(); hideRouteTips(); syncHeaderHeight(); fitRouteHits(); });
   // The mountain's layout and beacon size follow the screen: redraw home and welcome when a laptop-size window grows or shrinks
   // A name typed on the welcome screen (saved only on Start) and the cursor are kept across the redraw.
   if (window.matchMedia) matchMedia(SIDE_MQ).addEventListener("change", () => {
