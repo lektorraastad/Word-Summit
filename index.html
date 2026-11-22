@@ -504,6 +504,14 @@
   .vocab-pop .saved { display: flex; align-items: center; gap: 0.45rem; margin-top: 0.7rem; padding-top: 0.65rem; border-top: 1px solid var(--pop-line); font-weight: 700; color: var(--pop-good); }
   .vocab-pop .x { position: absolute; top: 0.6rem; right: 0.6rem; width: 36px; height: 36px; display: grid; place-items: center; background: none; border: 0; color: var(--pop-muted); border-radius: 8px; }
   .vocab-pop .x:hover { color: var(--pop-text); }
+  .vocab-pop :focus-visible { outline-color: var(--pop-text); }
+  .vocab-pop .speak-btn { margin-left: 0.3rem; background: transparent; border-color: var(--pop-line); color: var(--pop-text); }
+  .vocab-pop .speak-btn:hover { border-color: var(--pop-muted); background: transparent; }
+  .vocab-pop .vocab-where { margin-top: 0.7rem; padding-top: 0.65rem; border-top: 1px solid var(--pop-line); font-weight: 700; }
+  .vocab-pop .vocab-star { margin-top: 0.7rem; min-height: 40px; padding: 0.35rem 0.9rem; gap: 0.45rem; background: transparent; border-color: var(--pop-line); color: var(--pop-text); }
+  .vocab-pop .vocab-star:hover { border-color: var(--pop-muted); background: transparent; }
+  .vocab-pop .vocab-star[aria-pressed="true"] { border-color: var(--pop-text); }
+  .vocab-pop .vocab-star .ic { width: 18px; height: 18px; }
   .lang { display: inline-block; font-style: normal; font-size: 0.7rem; font-weight: 700; color: var(--muted); border: 1px solid var(--border); border-radius: 4px; padding: 0 0.3rem; margin-right: 0.4rem; vertical-align: 0.1em; }
 
   .practice-note { margin: -0.4rem 0 1rem; max-width: 60em; }
@@ -629,8 +637,10 @@
   .vault-info h1, .ach-head h1 { font-size: 2rem; margin-bottom: 0.35rem; }
   .stage-counts { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.8rem 0 1.1rem; }
   .stage-pill { display: inline-block; font-size: 0.875rem; font-weight: 700; padding: 0.2rem 0.8rem; border-radius: 999px; background: var(--primary-soft); color: var(--primary); }
-  .stage-pill.practising { color: var(--warn); background: var(--warn-soft); }
   .stage-pill.learned { color: var(--success); background: var(--success-soft); }
+  .stage-pill.saved { color: var(--muted); background: var(--surface-2); }
+  .stage-pill.learning { color: var(--warn); background: var(--warn-soft); }
+  .stage-pill.gold { color: var(--gold); background: var(--gold-soft); box-shadow: inset 0 0 0 1.5px var(--accent); }
   .vault-lock { color: var(--muted); margin-bottom: 0.7rem; }
   .vault-group .section-title { display: flex; align-items: center; gap: 0.6rem; font-family: var(--sans); font-size: 1.06rem; font-weight: 700; }
   .word-list { padding: 0.2rem 1.4rem; }
@@ -639,19 +649,73 @@
   .word-main { flex: 1; min-width: 0; }
   .word-w { font-family: var(--serif); font-weight: 600; font-size: 1.25rem; color: var(--heading); display: flex; align-items: center; gap: 0.8rem; }
   .word-def { color: var(--muted); }
-  .word-def .no { margin-left: 0.6rem; }
+  .word-def .no { margin-left: 0.6rem; display: inline-block; }
   .word-src { font-size: 0.85rem; color: var(--muted); margin-top: 0.15rem; }
   .word-actions { display: flex; gap: 0.5rem; align-items: center; white-space: nowrap; }
   .remove-link { color: var(--muted); font-size: 0.9rem; }
+  .word-next { display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem; white-space: nowrap; color: var(--muted); }
+  .star-btn {
+    flex: none; display: grid; place-items: center; width: 40px; height: 40px; padding: 0;
+    border-radius: 10px; border: 1.5px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer;
+  }
+  .star-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .star-btn[aria-pressed="true"] { color: var(--gold); background: var(--gold-soft); border-color: var(--accent); }
+  .star-btn .ic { width: 20px; height: 20px; }
+  .show-all { padding: 0.6rem 0 0.8rem; }
+  .vault-action .row-actions { margin-top: 0.2rem; }
+  @media (max-width: 600px) {
+    .vault-group .word-row { flex-wrap: wrap; row-gap: 0.4rem; }
+    .vault-group .word-actions, .vault-group .word-next { width: 100%; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: flex-start; white-space: normal; }
+    .round-words .word-row { flex-wrap: wrap; row-gap: 0.3rem; }
+    .round-words .word-main { min-width: max-content; }
+    .round-words .word-actions { flex-wrap: wrap; white-space: normal; margin-left: auto; }
+  }
   .day-dots { display: inline-flex; gap: 5px; }
-  .day-dots span { width: 12px; height: 12px; border-radius: 50%; background: var(--border); }
-  .day-dots span.on { background: var(--accent); }
+  .day-dots span { width: 12px; height: 12px; border-radius: 50%; background: var(--border); box-shadow: inset 0 0 0 1.5px var(--muted); }
+  .day-dots span.on { background: var(--accent); box-shadow: inset 0 0 0 1.5px var(--gold); }
   .quiz-card { max-width: 720px; margin: 0 auto; padding: 2rem 2.25rem; }
   .quiz-card .q-prompt { font-family: var(--sans); font-size: 1.25rem; font-weight: 700; }
   .quiz-def, .quiz-word { color: var(--primary); font-family: var(--serif); }
   .quiz-gap { display: block; margin-top: 0.7rem; font-family: var(--serif); font-weight: 400; font-size: 1.4rem; line-height: 1.55; color: var(--heading); }
   .quiz-gap .gap { font-family: inherit; font-weight: 600; color: var(--primary); letter-spacing: 1px; }
   .quiz-card .opt { font-family: var(--serif); font-size: 1.12rem; }
+  .quiz-card .type-no { margin: -0.6rem 0 1rem; color: var(--muted); }
+  .quiz-card .type-no [lang] { color: var(--text); font-weight: 700; }
+  .type-box { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.6rem; }
+  .type-box .field-label { width: 100%; margin-bottom: 0; }
+  .type-box p { width: 100%; margin: 0; }
+  #type-input { flex: 1 1 9rem; min-width: 0; font-family: var(--serif); font-size: 1.25rem; }
+  #type-input:disabled { color: var(--text); background: var(--surface-2); }
+  .type-msg { min-height: 1.4em; font-weight: 700; color: var(--warn); }
+  .speak-btn {
+    display: inline-grid; place-items: center; vertical-align: middle; min-width: 32px; min-height: 32px; padding: 0 0.3rem;
+    border-radius: 8px; border: 1.5px solid var(--border); background: var(--surface); color: var(--primary); cursor: pointer;
+  }
+  .speak-btn:hover { border-color: var(--primary); background: var(--primary-soft); }
+  .speak-btn .ic { width: 18px; height: 18px; }
+  .board { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 0.65rem; margin-bottom: 0.4rem; }
+  .board-col { display: flex; flex-direction: column; gap: 0.65rem; min-width: 0; }
+  .board-word, .board-mean {
+    min-height: 56px; padding: 0.7rem 0.9rem; border-radius: 12px; text-align: left; line-height: 1.35; overflow-wrap: anywhere;
+    background: var(--surface); border: 1.5px solid var(--border); color: var(--text); cursor: pointer;
+    transition: border-color 0.12s, background-color 0.12s;
+  }
+  .board-word { font-family: var(--serif); font-weight: 600; font-size: 1.12rem; color: var(--heading); }
+  .board-mean { font-size: 0.98rem; }
+  .board-word:hover:not(:disabled), .board-mean:hover:not(:disabled) { border-color: var(--primary); }
+  .board-word[aria-pressed="true"], .board-mean[aria-pressed="true"] { border-color: var(--primary); background: var(--primary-soft); box-shadow: inset 0 0 0 1.5px var(--primary); }
+  .board-word.matched, .board-mean.matched { background: var(--success-soft); border-color: var(--success-fill); color: var(--heading); cursor: default; }
+  .board-word.shake, .board-mean.shake { animation: shake 0.4s ease-in-out; border-color: var(--danger); }
+  @keyframes shake { 0%, 100% { transform: none; } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+  @media (prefers-reduced-motion: reduce) { .board-word.shake, .board-mean.shake { animation: none; } }
+  @media (max-width: 600px) {
+    .board { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .board-word, .board-mean { padding: 0.6rem 0.7rem; overflow-wrap: break-word; }
+    .board-word { font-size: 1.02rem; hyphens: auto; }
+  }
+  #board-status { min-height: 1.4em; margin-top: 0.6rem; font-weight: 700; color: var(--muted); }
+  .board-summary .word-list { padding: 0; margin: 0.4rem 0 1.1rem; }
+  .round-summary { font-weight: 700; color: var(--heading); margin: 0.2rem 0 0.4rem; }
   .row-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
 
   /* ---------- Achievements ---------- */
@@ -1010,7 +1074,7 @@
 
 const TEST_MODE = false;
 const DELIVERY = "hosted"; // "hosted" (GitHub Pages) or "file" (shared as a file)
-const LIBRARY_VERSION = "2026-11-21.2234";
+const LIBRARY_VERSION = "2026-11-22.1008";
 
 // The library is stored scrambled so texts and answers aren't readable in the page source.
 // "RCL2:" (18 November 2026): each character from space to ~ swapped through LIB_SWAP, so the web server can still compress the page.
@@ -1107,7 +1171,8 @@ const ICON_PATHS = {
  "caret-down": "<path d=\"M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z\"/>",
  "arrow-right": "<path d=\"M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z\"/>",
  "x-circle": "<path d=\"M165.66,101.66,139.31,128l26.35,26.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z\"/>",
- "check-circle": "<path d=\"M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z\"/>"
+ "check-circle": "<path d=\"M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z\"/>",
+ "speaker": "<path d=\"M155.51,24.81a8,8,0,0,0-8.42.88L77.25,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V32A8,8,0,0,0,155.51,24.81ZM32,96H72v64H32ZM144,207.64,88,164.09V91.91l56-43.55Zm54-106.08a40,40,0,0,1,0,52.88,8,8,0,0,1-12-10.58,24,24,0,0,0,0-31.72,8,8,0,0,1,12-10.58ZM248,128a79.9,79.9,0,0,1-20.37,53.34,8,8,0,0,1-11.92-10.67,64,64,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67A79.83,79.83,0,0,1,248,128Z\"/>"
 };
 const ICON_DUO = {
  "adventure": "<path d=\"M128,32a96,96,0,1,0,96,96A96,96,0,0,0,128,32Zm16,112L80,176l32-64,64-32Z\" opacity=\"0.2\"/><path d=\"M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM172.42,72.84l-64,32a8.05,8.05,0,0,0-3.58,3.58l-32,64A8,8,0,0,0,80,184a8.1,8.1,0,0,0,3.58-.84l64-32a8.05,8.05,0,0,0,3.58-3.58l32-64a8,8,0,0,0-10.74-10.74ZM138,138,97.89,158.11,118,118l40.15-20.07Z\"/>",
@@ -1428,6 +1493,7 @@ function newState() {
     lastResult: null,
     placement: null,
     vaultRounds: 0,
+    vaultVersion: 2,
     achievements: {},
     practiced: [],
     lastBackupTexts: 0,
@@ -1443,10 +1509,14 @@ function loadState() {
   if (!raw) return;
   try {
     const data = decodeData(raw);
-    state = Object.assign(newState(), data);
+    state = Object.assign(newState(), { vaultVersion: 0 }, data);
     SKILLS.forEach(s => { if (!state.skills[s]) state.skills[s] = { pts: 0, n: 0, recent: [] }; });
   } catch (e) {
     loadProblem = "damaged";
+    return;
+  }
+  if (state.vaultVersion !== 2) {
+    try { migrateVault(state); save(); } catch (e) { /* keep the saved data as it is */ }
   }
 }
 function save() {
@@ -1887,6 +1957,7 @@ let screen = "home";
 function go(name) {
   if (!["result", "quiz-done", "placement-done"].includes(name)) freshAch = [];
   screen = name;
+  vaultShowAll = false;
   hideVocab();
   hideRouteTips();
   render();
@@ -1978,7 +2049,7 @@ function renderHeader() {
   const slot = $("level-pill-slot");
   const vslot = $("vault-slot");
   if (state.level && !loadProblem) {
-    const ready = state.savedWords.length >= VAULT_UNLOCK ? readyToPractise().length : 0;
+    const ready = state.savedWords.length >= VAULT_UNLOCK ? readyCount() : 0;
     vslot.innerHTML = `<button type="button" class="icon-btn" id="btn-vault" title="Your saved words" aria-label="Vault${ready ? `, ${ready} word${ready === 1 ? "" : "s"} to practise` : ""}">
       ${icon("bookmark")}
       <span class="lbl">Vault</span>${ready ? `<span class="count-badge" aria-hidden="true">${ready}</span>` : ""}</button>
@@ -2420,7 +2491,7 @@ function levelCard() {
 }
 // "N words are ready to practise" with a Practise now button (home and result screens)
 function vaultNudge() {
-  const ready = state.savedWords.length >= VAULT_UNLOCK ? readyToPractise().length : 0;
+  const ready = state.savedWords.length >= VAULT_UNLOCK ? readyCount() : 0;
   if (!ready) return "";
   return `
       <div class="card vault-nudge">
@@ -2670,6 +2741,7 @@ document.addEventListener("pointerout", e => {
 });
 document.addEventListener("focusin", e => { const g = e.target.closest && e.target.closest(".lvl"); if (g) showLevelTip(g); });
 document.addEventListener("focusout", e => { if (e.target.closest && e.target.closest(".lvl")) hideLevelTip(); });
+document.addEventListener("click", e => { const sp = e.target.closest && e.target.closest("[data-speak]"); if (sp) speakWord(sp.dataset.speak); });
 document.addEventListener("click", e => {
   const bb = e.target.closest && e.target.closest(".beacon-btn");
   if (bb) { showBeaconPop(bb, true); return; }
@@ -2708,11 +2780,24 @@ function bindVocab(container) {
     });
   });
 }
-function sentenceFor(paragraphText, word) {
+function sentenceFor(paragraphText, word, nth = 0) {
   const plain = stripMarkup(paragraphText);
   const sentences = plain.match(/[^.!?]+[.!?]+['"’”)]*|[^.!?]+$/g) || [plain];
   const lw = word.toLowerCase();
-  const hit = sentences.find(s => s.toLowerCase().includes(lw));
+  // the sentence holding the nth dotted occurrence of the word (counted among the markup only)
+  let hit = null;
+  const re = /\[([^|\]]+)\|[^|\]]+\|[^\]]+\]/g;
+  let m, seen = 0, before = null;
+  while ((m = re.exec(paragraphText)) !== null) {
+    if (m[1].toLowerCase() !== lw) continue;
+    if (seen++ === nth) { before = stripMarkup(paragraphText.slice(0, m.index)).length; break; }
+  }
+  if (before !== null) {
+    let pos = 0;
+    const raw = plain.match(/[^.!?]+[.!?]+['"’”)]*|[^.!?]+$/g) || [plain];
+    for (const s of raw) { if (before < pos + s.length) { hit = s; break; } pos += s.length; }
+  }
+  if (!hit) hit = sentences.find(s => s.toLowerCase().includes(lw));
   return (hit || plain).trim();
 }
 function showVocab(el) {
@@ -2724,26 +2809,30 @@ function showVocab(el) {
   const { w, en, no } = el.dataset;
   const t = state.active ? findText(state.active.id) : null;
   let status = "";
-  const already = state.savedWords.some(x => x.word.toLowerCase() === w.toLowerCase());
-  if (already) {
-    status = `${icon("check")}Already in your Vault`;
+  let saved = state.savedWords.find(x => x.word.toLowerCase() === w.toLowerCase());
+  if (saved) {
+    status = `<div class="vocab-where">In your Vault: ${STAGE_LABELS[wordStage(saved)]}</div>`;
   } else {
     const paraEl = el.closest("p");
     const pIndex = paraEl ? parseInt(paraEl.id.replace("para-", ""), 10) - 1 : 0;
-    const sentence = t ? sentenceFor(t.paragraphs[pIndex] || "", w) : "";
-    state.savedWords.push(makeSavedWord(w, en, no, { sentence, textId: t ? t.id : null, level: t ? t.level : null }));
+    const nth = paraEl ? [...paraEl.querySelectorAll(".vocab")].filter(x => (x.dataset.w || "").toLowerCase() === w.toLowerCase()).indexOf(el) : 0;
+    const sentence = t ? sentenceFor(t.paragraphs[pIndex] || "", w, Math.max(0, nth)) : "";
+    saved = makeSavedWord(w, en, no, { sentence, textId: t ? t.id : null, level: t ? t.level : null });
+    state.savedWords.push(saved);
     save();
-    status = `${icon("check")}Saved to your Vault`;
+    status = `<div class="saved">${icon("check")}Saved to your Vault</div>`;
     renderHeader();
     renderTester();
   }
+  const starBtn = wordStep(saved) === 0 ? `<button type="button" class="btn btn-secondary vocab-star" id="vocab-star" aria-pressed="${saved.star > 0 ? "true" : "false"}">${vocabStarIcon(saved)}Learn this next</button>` : "";
   const pop = $("vocab-pop");
   pop.innerHTML = `
     <button type="button" class="x" id="vocab-x" aria-label="Close">${icon("x")}</button>
-    <div class="w">${esc(w)}</div>
+    <div class="w">${esc(w)} ${speakBtn(w)}</div>
     <div class="line"><span class="lang">EN</span>${esc(en)}</div>
     <div class="line no"><span class="lang">NO</span><span lang="nb">${esc(no)}</span></div>
-    <div class="saved">${status}</div>`;
+    ${status}
+    ${starBtn}`;
   pop.setAttribute("aria-label", "Meaning of " + w);
   pop.style.setProperty("--topic", t ? topicOf(t).color : "var(--primary)");
   pop.classList.remove("hidden");
@@ -2757,7 +2846,14 @@ function showVocab(el) {
   pop.style.left = `${left}px`;
   pop.style.top = `${top}px`;
   $("vocab-x").addEventListener("click", () => { const back = openVocabEl; hideVocab(); if (back) back.focus({ preventScroll: true }); });
+  const star = $("vocab-star");
+  if (star) star.addEventListener("click", () => {
+    toggleStar(wordKey(saved));
+    star.setAttribute("aria-pressed", saved.star > 0 ? "true" : "false");
+    star.querySelector("svg").outerHTML = vocabStarIcon(saved);
+  });
 }
+const vocabStarIcon = w => w.star > 0 ? icon("star", "ic", ICON_DUO) : icon("star");
 function hideVocab() {
   $("vocab-pop").classList.add("hidden");
   if (openVocabEl) { openVocabEl.classList.remove("open"); openVocabEl.setAttribute("aria-expanded", "false"); }
@@ -3118,16 +3214,114 @@ function viewResult() {
 // ---------------------------------------------------------------------------
 const VAULT_UNLOCK = 3;      // saved words needed before practice opens
 const ROUND_SIZE = 5;
-const LEARNED_AT = 3;        // correct answers on 3 different days
-const QUIZ_TYPES = ["def2word", "word2def", "gap"];
-const QUIZ_TYPE_LABELS = { def2word: "Choose the word", word2def: "Choose the meaning", gap: "Fill the gap" };
+const QUIZ_TYPE_LABELS = { def2word: "Choose the word", word2def: "Choose the meaning", gap: "Fill the gap", type: "Type the word", check: "Check-up" };
 
 const wordKey = w => w.word.toLowerCase();
-const wordStage = w => ((w.credits || 0) >= LEARNED_AT ? "learned" : (w.credits || 0) >= 1 ? "practising" : "new");
-const STAGE_LABELS = { new: "New", practising: "Practising", learned: "Learned" };
-const wordsLearned = () => state.savedWords.filter(w => wordStage(w) === "learned").length;
-const creditedToday = w => w.lastCredit === today();
-const readyToPractise = () => state.savedWords.filter(w => wordStage(w) !== "learned" && !creditedToday(w));
+const LEARNING_PLACES = 8;   // words in Learning now at once
+const BOARD_MIN = 3;
+const BOARD_MAX = 5;
+const SHORT_SENTENCE = 5;
+const WAIT_DAYS = { 1: 1, 2: 3, 3: 21 };   // days until the next step is due, by the step just reached
+const STEP = { SAVED: 0, MATCHED: 1, GAPPED: 2, LEARNED: 3, GOLD: 4 };
+const STAGE_LABELS = { saved: "Saved for later", learning: "Learning now", learned: "Learned", gold: "Gold" };
+
+function addDays(day, n) {
+  const [y, m, d] = day.split("-").map(Number);
+  const t = new Date(y, m - 1, d + n);
+  return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`;
+}
+function wordStep(w) {
+  if (typeof w.step === "number") return w.step;
+  return Math.min(3, w.credits || 0);
+}
+function wordDue(w) {
+  if (w.due) return w.due;
+  const step = wordStep(w);
+  if (step === 1 || step === 2) return today();
+  if (step === 3) return addDays(w.learnedOn || w.date || today(), WAIT_DAYS[3]);
+  return null;
+}
+function isDue(w, day = today()) {
+  const step = wordStep(w);
+  return step >= 1 && step <= 3 && wordDue(w) <= day;
+}
+function wordStage(w) {
+  const step = wordStep(w);
+  return step === 0 ? "saved" : step <= 2 ? "learning" : step === 3 ? "learned" : "gold";
+}
+const wordsLearned = () => state.savedWords.filter(w => wordStep(w) >= 3).length;
+const learningNow = () => state.savedWords.filter(w => { const s = wordStep(w); return s === 1 || s === 2; });
+function waitingWords() {
+  const idx = new Map(state.savedWords.map((w, i) => [w, i]));
+  const waiting = state.savedWords.filter(w => wordStep(w) === 0);
+  const starred = waiting.filter(w => w.star > 0).sort((a, b) => a.star - b.star);
+  const rest = waiting.filter(w => !(w.star > 0)).sort((a, b) => idx.get(b) - idx.get(a));
+  return starred.concat(rest);
+}
+function toggleStar(key) {
+  const w = state.savedWords.find(x => wordKey(x) === key);
+  if (!w) return;
+  if (w.star > 0) w.star = 0;
+  else w.star = Math.max(Date.now(), ...state.savedWords.map(x => (x.star || 0) + 1));
+  save();
+}
+function knowWord(key) {
+  const w = state.savedWords.find(x => wordKey(x) === key);
+  if (!w || wordStep(w) !== 0) return;
+  w.step = 2;
+  w.due = today();
+  w.credits = 2;
+  save();
+}
+function applyAnswer(w, kind, correct, day = today()) {
+  const beforeStep = wordStep(w), before = wordStage(w);
+  let step = beforeStep, note = "";
+  if (kind === "enter") {
+    step = 1;
+    w.due = addDays(day, WAIT_DAYS[1]);
+  } else if (kind === "step") {
+    if (correct) {
+      step = Math.min(4, beforeStep + 1);
+      w.due = step <= 3 ? addDays(day, WAIT_DAYS[step]) : null;
+      if (step === 3) w.learnedOn = day;
+      note = step === 3 ? "Learned! Check-up in 3 weeks." : step === 4 ? "Gold! You still knew it after three weeks." : "Right! Next step coming up.";
+    } else {
+      step = beforeStep <= 1 ? 1 : beforeStep - 1;
+      w.due = addDays(day, 1);
+      note = "Not yet. This word comes back tomorrow.";
+    }
+  }
+  w.step = step;
+  w.credits = Math.min(step, 3);
+  w.lastPractised = `${day}|${Date.now()}`;
+  save();
+  return { key: wordKey(w), word: w.word, kind, correct, beforeStep, afterStep: step, before, after: wordStage(w), note };
+}
+function migrateVault(s = state) {
+  if (s.vaultVersion === 2) return;
+  const day = today();
+  const moved = [];
+  (s.savedWords || []).forEach(w => {
+    if (typeof w.step !== "number") {
+      const c = w.credits || 0;
+      w.step = Math.min(3, c);
+      if (w.step === 1 || w.step === 2) { w.due = day; moved.push(w); }
+      else if (w.step === 3) { w.learnedOn = day; w.due = addDays(day, WAIT_DAYS[3]); }
+      else w.due = null;
+    }
+    if (w.star == null) w.star = 0;
+    if (w.learnedOn === undefined) w.learnedOn = null;
+  });
+  const learning = moved.filter(w => w.step === 1 || w.step === 2);
+  if (learning.length > LEARNING_PLACES) {
+    const ones = learning.filter(w => w.step === 1);
+    const room = Math.max(0, LEARNING_PLACES - learning.filter(w => w.step === 2).length);
+    const keep = new Set(ones.slice().sort((a, b) => (b.lastPractised || "").localeCompare(a.lastPractised || "")).slice(0, room));
+    const base = Date.now();
+    ones.filter(w => !keep.has(w)).forEach((w, i) => { w.step = 0; w.credits = 0; w.due = null; w.star = base + i; });
+  }
+  s.vaultVersion = 2;
+}
 const escapeRegex = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 let libraryWordsCache = null;
@@ -3150,8 +3344,10 @@ function libraryWords() {
 
 function gapSentence(w) {
   if (!w.sentence) return null;
-  const re = new RegExp(`\\b${escapeRegex(w.word)}\\b`, "i");
+  const re = new RegExp(`\\b${escapeRegex(w.word)}\\b`, "gi");
   if (!re.test(w.sentence)) return null;
+  if (w.sentence.trim().split(/\s+/).length <= SHORT_SENTENCE) return null;
+  re.lastIndex = 0;
   return w.sentence.replace(re, "_____");
 }
 
@@ -3216,265 +3412,138 @@ function meaningKind(en) {
   return "other";
 }
 
-function chooseRoundWords() {
-  const byOldest = (a, b) => (a.lastPractised || "").localeCompare(b.lastPractised || "");
-  const notLearned = state.savedWords.filter(w => wordStage(w) !== "learned");
-  const fresh = notLearned.filter(w => !creditedToday(w))
-    .sort((a, b) => (a.credits || 0) - (b.credits || 0) || byOldest(a, b));
-  const doneToday = notLearned.filter(creditedToday).sort(byOldest);
-  const learned = state.savedWords.filter(w => wordStage(w) === "learned").sort(byOldest);
+// ---- Planning a round (design 2026-11-22-vault-design) ----
+function planRound(day = today()) {
+  const byDue = (a, b) => (wordDue(a) || "").localeCompare(wordDue(b) || "");
+  const due = state.savedWords.filter(w => isDue(w, day));
+  const checks = due.filter(w => wordStep(w) === 3).sort(byDue);
+  const steps = due.filter(w => wordStep(w) !== 3)
+    .sort((a, b) => wordStep(b) - wordStep(a) || byDue(a, b));
+  const questions = checks.slice(0, 1).concat(steps, checks.slice(1)).slice(0, ROUND_SIZE);
+  const free = Math.max(0, LEARNING_PLACES - learningNow().length);
+  const canEnter = free >= BOARD_MIN || (free >= 1 && questions.length === 0);
+  const entering = canEnter ? waitingWords().slice(0, Math.min(BOARD_MAX, free)) : [];
+  return { questions, entering };
+}
+function readyCount() {
+  if (state.savedWords.length < VAULT_UNLOCK) return 0;
+  const p = planRound();
+  return p.questions.length + p.entering.length;
+}
+function nextReadyDay() {
+  const days = state.savedWords.filter(w => { const s = wordStep(w); return s >= 1 && s <= 3; }).map(wordDue).filter(Boolean).sort();
+  return days.length ? days[0] : null;
+}
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function whenLabel(dueDay, from = today()) {
+  const toDate = d => { const [y, m, dd] = d.split("-").map(Number); return new Date(y, m - 1, dd); };
+  const n = Math.round((toDate(dueDay) - toDate(from)) / 86400000);
+  if (n <= 0) return "now";
+  if (n === 1) return "tomorrow";
+  const t = toDate(dueDay);
+  if (n <= 6) return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][t.getDay()];
+  return `${t.getDate()} ${MONTHS[t.getMonth()]}`;
+}
 
-  const picked = [];
-  const add = list => list.forEach(w => { if (picked.length < ROUND_SIZE && !picked.includes(w)) picked.push(w); });
-  add(fresh.slice(0, learned.length ? ROUND_SIZE - 1 : ROUND_SIZE));
-  if (learned.length) picked.push(learned[0]);           // at most one learned word per round
-  add(fresh);
-  add(doneToday);
-  return shuffle(picked);
+// Typed answers and sound
+function normaliseTyped(s) {
+  return String(s == null ? "" : s).toLowerCase().replace(/[‘’ʼ]/g, "'").replace(/[-\s]+/g, " ").trim().replace(/[.,!?]+$/, "").trim();
+}
+
+function oneEditApart(a, b) {
+  if (a === b) return false;
+  const la = a.length, lb = b.length;
+  if (Math.abs(la - lb) > 1) return false;
+  let i = 0;
+  while (i < la && i < lb && a[i] === b[i]) i++;
+  if (la === lb) {
+    if (a.slice(i + 1) === b.slice(i + 1)) return true;                       // one letter changed
+    return a[i] === b[i + 1] && a[i + 1] === b[i] && a.slice(i + 2) === b.slice(i + 2);   // two neighbours swapped
+  }
+  return la > lb ? a.slice(i + 1) === b.slice(i) : b.slice(i + 1) === a.slice(i);   // one letter removed or added
+}
+
+function checkTyped(typed, answers) {
+  const t = normaliseTyped(typed), list = answers.map(normaliseTyped);
+  if (list.includes(t)) return "right";
+  return list.some(a => a.replace(/\s/g, "").length >= 4 && oneEditApart(t, a)) ? "almost" : "wrong";
+}
+
+function nearlySame(a, b) {
+  const clean = x => String(x == null ? "" : x).toLowerCase().replace(/[^\p{L}]/gu, "");
+  a = clean(a); b = clean(b);
+  if (!a || !b) return false;
+  if (a === b || oneEditApart(a, b)) return true;
+  const [short, long] = a.length <= b.length ? [a, b] : [b, a];
+  return short.length >= 5 && long.startsWith(short);
+}
+
+function hideNorwegian(word, no) {
+  return String(no || "").split(/\s*[,\/;]\s*|\s+eller\s+/).some(part => nearlySame(word, part));
+}
+
+let voiceCache;
+function englishVoice() {
+  if (voiceCache !== undefined) return voiceCache;
+  if (typeof speechSynthesis === "undefined") return null;
+  const voices = speechSynthesis.getVoices() || [];
+  const v = voices.find(x => String(x.lang).replace("_", "-").toLowerCase() === "en-gb") || voices.find(x => /^en([-_]|$)/i.test(x.lang)) || null;
+  if (v) voiceCache = v;
+  return v;
+}
+if (typeof speechSynthesis !== "undefined") speechSynthesis.addEventListener("voiceschanged", () => { voiceCache = undefined; });
+
+const canSpeak = () => typeof speechSynthesis !== "undefined" && typeof SpeechSynthesisUtterance !== "undefined" && !!englishVoice();
+
+function speakWord(text) {
+  if (!canSpeak()) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.voice = englishVoice(); u.lang = u.voice.lang; u.rate = 0.9;
+  speechSynthesis.speak(u);
+}
+
+const speakBtn = text => canSpeak()
+  ? `<button type="button" class="speak-btn" data-speak="${esc(text)}" aria-label="Hear ${esc(text)}">${icon("speaker")}</button>` : "";
+
+function questionFor(w, kind, i = 0) {
+  const step = wordStep(w), gap = gapSentence(w), spaced = /\s/.test(w.word.trim());
+  let type;
+  if (kind === "enter") type = "word2def";
+  else if (kind === "practice") type = i % 2 === 0 ? "word2def" : "def2word";
+  else if (step === 1) type = gap ? "gap" : "def2word";
+  else if (step === 2) type = spaced ? "def2word" : "type";
+  else if (spaced) type = gap ? "gap" : "def2word";
+  else type = gap ? "check" : "type";
+  const q = { key: wordKey(w), kind, type };
+  if (type === "gap" || type === "check") q.gap = gap;
+  if (type !== "type" && type !== "check") {
+    const field = type === "word2def" ? "en" : "word";
+    q.options = shuffle([String(w[field]), ...pickDistractors(w, field)]);
+    q.correct = q.options.indexOf(String(w[field]));
+  } else {
+    q.answers = [w.word];
+    q.hint = { first: w.word[0], letters: (w.word.match(/\p{L}/gu) || []).length };
+    q.hideNo = hideNorwegian(w.word, w.no);
+    if (type === "check") {
+      const options = shuffle([String(w.word), ...pickDistractors(w, "word")]);
+      q.options = options; q.correct = options.indexOf(String(w.word));
+    }
+  }
+  return q;
 }
 
 function buildRound() {
   state.vaultRounds = (state.vaultRounds || 0) + 1;
-  const words = chooseRoundWords();
-  return words.map((w, i) => {
-    let type = QUIZ_TYPES[(state.vaultRounds + i) % QUIZ_TYPES.length];
-    const gap = gapSentence(w);
-    if (type === "gap" && !gap) type = "def2word";
-    const field = type === "word2def" ? "en" : "word";
-    const options = shuffle([String(w[field]), ...pickDistractors(w, field)]);
-    return { key: wordKey(w), type, gap, options, correct: options.indexOf(String(w[field])) };
-  });
+  const { questions, entering } = planRound();
+  const qs = questions.map((w, i) => questionFor(w, "step", i));
+  if (entering.length > 0 && entering.length < BOARD_MIN) entering.forEach((w, i) => qs.push(questionFor(w, "enter", i)));
+  return { qs, board: entering.length >= BOARD_MIN ? entering.map(wordKey) : null, practice: false };
 }
-
-let quiz = null; // { qs, i, answered, chosen, log: [] }
-
-function startQuiz() {
-  if (state.savedWords.length < VAULT_UNLOCK) { go("vault"); return; }
-  const qs = buildRound();
-  save();
-  quiz = { qs, i: 0, answered: false, chosen: null, log: [] };
-  go("quiz");
-}
-
-function applyQuizAnswer(w, correct) {
-  const before = wordStage(w);
-  const credBefore = w.credits || 0;
-  let note;
-  if (correct) {
-    if (wordStage(w) === "learned") {
-      note = "Still learned. Well remembered!";
-    } else if (creditedToday(w)) {
-      note = "You already practised this word today. Come back tomorrow to move it up.";
-    } else {
-      w.credits = credBefore + 1;
-      w.lastCredit = today();
-      note = wordStage(w) === "learned"
-        ? "Learned! You knew this word on 3 different days."
-        : `Practising: ${w.credits} of ${LEARNED_AT} days done.`;
-    }
-  } else {
-    w.credits = Math.max(0, credBefore - 1);
-    note = w.credits === credBefore ? "Keep practising this word." : `This word moves back one step, to ${STAGE_LABELS[wordStage(w)]}.`;
-  }
-  w.lastPractised = `${today()}|${Date.now()}`;
-  save();
-  return { word: w.word, correct, before, after: wordStage(w), note };
-}
-
-function answerQuiz(pos) {
-  if (!quiz || quiz.answered) return;
-  const q = quiz.qs[quiz.i];
-  const w = state.savedWords.find(x => wordKey(x) === q.key);
-  quiz.answered = true;
-  quiz.chosen = pos;
-  quiz.log.push(w ? applyQuizAnswer(w, pos === q.correct) : { word: q.key, correct: pos === q.correct, before: "new", after: "new", note: "" });
-  freshAch = freshAch.concat(checkAchievements());
-  renderHeader();
-  renderQuiz(true);
-}
-function nextQuiz() {
-  if (!quiz || !quiz.answered) return;
-  if (quiz.i + 1 >= quiz.qs.length) { go("quiz-done"); return; }
-  quiz.i += 1;
-  quiz.answered = false;
-  quiz.chosen = null;
-  renderQuiz(true);
-}
-
-function stageDots(w) {
-  const c = Math.min(LEARNED_AT, w.credits || 0);
-  let out = "";
-  for (let i = 0; i < LEARNED_AT; i++) out += `<span class="${i < c ? "on" : ""}"></span>`;
-  return `<span class="day-dots" title="${c} of ${LEARNED_AT} days">${out}</span>`;
-}
-
-function viewVault() {
-  const words = state.savedWords;
-  const counts = { new: 0, practising: 0, learned: 0 };
-  words.forEach(w => counts[wordStage(w)]++);
-  const ready = readyToPractise().length;
-  let action;
-  if (words.length < VAULT_UNLOCK) {
-    const need = VAULT_UNLOCK - words.length;
-    action = `<p class="vault-lock">Save ${need} more word${need === 1 ? "" : "s"} to start practising. Click dotted words while you read.</p>`;
-  } else if (ready > 0) {
-    action = `<button type="button" class="btn btn-primary" id="btn-practise">Practise ${ready} word${ready === 1 ? "" : "s"}</button>`;
-  } else {
-    action = `<p class="vault-lock">All your words are practised for today. Come back tomorrow to make them stronger!</p>
-      <button type="button" class="btn btn-secondary" id="btn-practise">Practise anyway</button>`;
-  }
-  const section = stage => {
-    const list = words.filter(w => wordStage(w) === stage);
-    if (!list.length) return "";
-    return `
-      <div class="vault-group">
-        <h2 class="section-title"><span class="stage-pill ${stage}">${STAGE_LABELS[stage]}</span> <span class="muted">${list.length}</span></h2>
-        <div class="card word-list">
-          ${list.map(w => {
-            const t = w.textId ? findText(w.textId) : null;
-            return `
-            <div class="word-row" data-key="${esc(wordKey(w))}">
-              <div class="word-main">
-                <div class="word-w">${esc(w.word)} ${stageDots(w)}</div>
-                <div class="word-def"><span class="lang">EN</span>${esc(w.en)} <span class="no"><span class="lang">NO</span><span lang="nb">${esc(w.no)}</span></span></div>
-                ${t ? `<div class="word-src">From: ${esc(t.placement ? "your reading test" : t.title)}</div>` : ""}
-              </div>
-              <div class="word-actions"><button type="button" class="btn-link remove-link" data-remove="${esc(wordKey(w))}">Remove</button></div>
-            </div>`;
-          }).join("")}
-        </div>
-      </div>`;
-  };
-  return `
-    <section class="home-grid">
-      <div class="card vault-head">
-        <div class="big-stat"><strong>${counts.learned}</strong><span>Words learned</span></div>
-        <div class="vault-info">
-          <h1>Your Vault</h1>
-          <p class="muted">Answer a word correctly on <strong>3 different days</strong> to learn it. A wrong answer moves the word back one step.</p>
-          <div class="stage-counts">
-            <span class="stage-pill new">New ${counts.new}</span>
-            <span class="stage-pill practising">Practising ${counts.practising}</span>
-            <span class="stage-pill learned">Learned ${counts.learned}</span>
-          </div>
-          <div class="vault-action">${action}</div>
-        </div>
-      </div>
-      ${words.length ? ["practising", "new", "learned"].map(section).join("") : `
-        <div class="card empty-box"><div class="empty-icon">${icon("bookmark")}</div><p><strong>Your Vault is empty.</strong></p><p>Click dotted words while you read. They are saved here so you can practise them.</p><button type="button" class="btn btn-primary" id="btn-vault-read">Choose a text</button></div>`}
-    </section>`;
-}
-function bindVault() {
-  const readBtn = $("btn-vault-read");
-  if (readBtn) readBtn.addEventListener("click", () => go("home"));
-  const p = $("btn-practise");
-  if (p) p.addEventListener("click", startQuiz);
-  document.querySelectorAll("[data-remove]").forEach(b => {
-    b.addEventListener("click", () => {
-      const box = b.parentElement;
-      const key = b.dataset.remove;
-      box.innerHTML = `<span class="small">Remove?</span> <button type="button" class="btn-link danger-link" data-yes>Yes</button> <button type="button" class="btn-link" data-no>No</button>`;
-      box.querySelector("[data-yes]").addEventListener("click", () => {
-        state.savedWords = state.savedWords.filter(w => wordKey(w) !== key);
-        save();
-        render();
-      });
-      box.querySelector("[data-no]").addEventListener("click", () => render());
-    });
-  });
-}
-
-function viewQuiz() {
-  return `<section class="card quiz-card" id="quiz-card"></section>`;
-}
-// focusIt: after an answer focus goes to the feedback, after "Next word" to the new prompt; never on the first draw (go() does that).
-function renderQuiz(focusIt = false) {
-  const card = $("quiz-card");
-  if (!card || !quiz) return;
-  const q = quiz.qs[quiz.i];
-  const w = state.savedWords.find(x => wordKey(x) === q.key) || { word: q.key, en: "", no: "" };
-  const keys = ["A", "B", "C", "D"];
-  const dots = quiz.qs.map((_, i) => {
-    if (i < quiz.log.length) return `<span class="${quiz.log[i].correct ? "full" : "zero"}"></span>`;
-    return `<span class="${i === quiz.i ? "now" : ""}"></span>`;
-  }).join("");
-  let prompt;
-  if (q.type === "def2word") prompt = `Which word means: <span class="quiz-def">“${esc(w.en)}”</span>`;
-  else if (q.type === "word2def") prompt = `What does <span class="quiz-word">${esc(w.word)}</span> mean?`;
-  else prompt = `Which word fits the gap?<span class="quiz-gap">“${esc(q.gap).replace("_____", '<span class="gap">_____</span>')}”</span>`;
-  const opts = q.options.map((o, i) => {
-    let cls = "opt";
-    if (quiz.answered) {
-      if (i === q.correct) cls += " correct";
-      else if (i === quiz.chosen) cls += " wrong";
-    }
-    return `<button type="button" class="${cls}" data-pos="${i}" ${quiz.answered ? "disabled" : ""}><span class="key">${keys[i]}</span><span>${esc(o)}</span></button>`;
-  }).join("");
-  let feedback = "";
-  if (quiz.answered) {
-    const r = quiz.log[quiz.i];
-    const last = quiz.i + 1 >= quiz.qs.length;
-    feedback = `
-      <div class="feedback ${r.correct ? "good" : "bad"}" role="status" tabindex="-1">
-        <h3>${r.correct ? "Correct!" : `Not quite. The answer is “${esc(q.options[q.correct])}”.`}</h3>
-        <p><strong>${esc(w.word)}</strong>: ${esc(w.en)}<br><span class="lang">NO</span><em lang="nb">${esc(w.no)}</em></p>
-        <p class="small">${esc(r.note)}</p>
-        <div class="actions"><button type="button" class="btn btn-primary btn-block" id="btn-quiz-next">${last ? "See your result" : "Next word"}</button></div>
-      </div>`;
-  }
-  card.innerHTML = `
-    <div class="q-top">
-      <span class="q-count">Word ${quiz.i + 1} of ${quiz.qs.length}</span>
-      <span class="skill-chip">${QUIZ_TYPE_LABELS[q.type]}</span>
-    </div>
-    <div class="q-dots" aria-hidden="true">${dots}</div>
-    <h2 class="q-prompt" tabindex="-1">${prompt}</h2>
-    <div class="options">${opts}</div>
-    ${feedback}
-    <div class="kbd-hint">Keys: <kbd>1</kbd>–<kbd>4</kbd> or <kbd>A</kbd>–<kbd>D</kbd> to answer · <kbd>Enter</kbd> to go on</div>`;
-  card.querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => answerQuiz(parseInt(b.dataset.pos, 10))));
-  const nx = $("btn-quiz-next");
-  if (nx) nx.addEventListener("click", nextQuiz);
-  if (focusIt) (card.querySelector(".feedback") || card.querySelector(".q-prompt")).focus({ preventScroll: true });
-}
-
-function viewQuizDone() {
-  if (!quiz) return viewVault();
-  const right = quiz.log.filter(r => r.correct).length;
-  const total = quiz.log.length;
-  const ring = right === total ? "pass" : right >= total / 2 ? "mid" : "low";
-  const rows = quiz.log.map(r => {
-    const moved = r.before !== r.after
-      ? `<span class="stage-pill ${r.before}">${STAGE_LABELS[r.before]}</span>${icon("arrow-right", "ic stage-arrow")}<span class="sr-only"> to </span><span class="stage-pill ${r.after}">${STAGE_LABELS[r.after]}</span>`
-      : `<span class="stage-pill ${r.after}">${STAGE_LABELS[r.after]}</span>`;
-    return `<div class="word-row"><div class="word-main"><div class="word-w">${r.correct ? icon("check-circle", "ic res-ic right") : icon("x-circle", "ic res-ic wrong")}<span class="sr-only">${r.correct ? "Right:" : "Wrong:"} </span>${esc(r.word)}</div></div><div class="word-actions">${moved}</div></div>`;
-  }).join("");
-  const more = readyToPractise().length;
-  return `
-    <section class="home-grid">
-      <div class="card result-card">
-        <div class="score-ring ${ring}"><div>${right}<small>of ${total} right</small></div></div>
-        <div>
-          <h1>${right === total ? "Perfect round!" : right >= total / 2 ? "Good practice!" : "Keep practising!"}</h1>
-          <p class="muted">Words learned: <strong>${wordsLearned()}</strong>. Words become learned after 3 different days, so come back tomorrow.</p>
-        </div>
-      </div>
-      ${achievementNotice()}
-      <div class="card word-list">${rows}</div>
-      <div class="row-actions">
-        ${more ? `<button type="button" class="btn btn-primary" id="btn-practise">Practise ${Math.min(more, ROUND_SIZE)} more word${Math.min(more, ROUND_SIZE) === 1 ? "" : "s"}</button>` : ""}
-        <button type="button" class="btn btn-secondary" id="btn-to-vault">Back to my Vault</button>
-        <button type="button" class="btn btn-secondary" id="btn-to-home">Back to reading</button>
-      </div>
-    </section>`;
-}
-function bindQuizDone() {
-  const p = $("btn-practise");
-  if (p) p.addEventListener("click", startQuiz);
-  const v = $("btn-to-vault");
-  if (v) v.addEventListener("click", () => go("vault"));
-  const h = $("btn-to-home");
-  if (h) h.addEventListener("click", () => go("home"));
+function buildPracticeRound() {
+  const words = state.savedWords.filter(w => wordStep(w) >= 1)
+    .sort((a, b) => (a.lastPractised || "").localeCompare(b.lastPractised || "")).slice(0, ROUND_SIZE);
+  return { qs: words.map((w, i) => questionFor(w, "practice", i)), board: null, practice: true };
 }
 
 function findWordSource(word) {
@@ -3491,9 +3560,507 @@ function findWordSource(word) {
   return { textId: null, level: null, sentence: "" };
 }
 function makeSavedWord(word, en, no, src) {
-  return { word, en, no, sentence: src.sentence || "", textId: src.textId || null, level: src.level || null, date: today(), credits: 0, lastCredit: null, lastPractised: null };
+  return { word, en, no, sentence: src.sentence || "", textId: src.textId || null, level: src.level || null, date: today(), credits: 0, lastCredit: null, lastPractised: null, step: 0, due: null, star: 0, learnedOn: null };
 }
 
+
+// ---------------------------------------------------------------------------
+// Vault screens: the Vault page, the practice screen, the matching board and the round result
+// ---------------------------------------------------------------------------
+// quiz = { qs, i, answered, chosen, log, practice, phase: "questions" | "board" | "board-done",
+//          board: { keys, order, picked: null | {side, key}, matched, mistakes, entered } | null, almost, typed }
+let quiz = null;
+
+const isTyped = q => q.type === "type" || q.type === "check";
+
+function beginRound(round) {
+  save();
+  quiz = {
+    qs: round.qs, i: 0, answered: false, chosen: null, log: [], practice: round.practice,
+    phase: round.qs.length ? "questions" : "board",
+    board: round.board ? { keys: round.board, order: shuffle(round.board), picked: null, matched: [], mistakes: 0, entered: false } : null,
+    almost: false, typed: "",
+  };
+  go("quiz");
+}
+function startQuiz() {
+  if (state.savedWords.length < VAULT_UNLOCK) { go("vault"); return; }
+  if (!readyCount()) { startPractice(); return; }   // nothing ready (the old Vault page's "Practise anyway")
+  beginRound(buildRound());
+}
+function startPractice() {
+  const round = buildPracticeRound();
+  if (!round.qs.length) { go("vault"); return; }
+  beginRound(round);
+}
+
+// One answer to the current question: move the word and show the feedback.
+function recordAnswer(correct) {
+  const q = quiz.qs[quiz.i];
+  const w = state.savedWords.find(x => wordKey(x) === q.key);
+  quiz.answered = true;
+  quiz.log.push(w ? applyAnswer(w, q.kind, correct)
+    : { key: q.key, word: q.key, kind: q.kind, correct, beforeStep: 0, afterStep: 0, before: "saved", after: "saved", note: "" });
+  freshAch = freshAch.concat(checkAchievements());
+  renderHeader();
+  renderQuiz(true);
+}
+function answerQuiz(pos) {
+  if (!quiz || quiz.phase !== "questions" || quiz.answered) return;
+  const q = quiz.qs[quiz.i];
+  if (isTyped(q) || !q.options) return;
+  quiz.chosen = pos;
+  recordAnswer(pos === q.correct);
+}
+// Typed answers: one more try after the first spelling slip ("almost"), then right or wrong.
+function submitTyped(text) {
+  if (!quiz || quiz.phase !== "questions" || quiz.answered) return;
+  const q = quiz.qs[quiz.i];
+  if (!isTyped(q) || !String(text || "").trim()) return;
+  const result = checkTyped(text, q.answers);
+  if (result === "almost" && !quiz.almost) {
+    quiz.almost = true;
+    const msg = document.querySelector("#quiz-card .type-msg");
+    if (msg) msg.textContent = "Almost! Check the spelling.";
+    const box = $("type-input");
+    if (box) box.focus();
+    return;
+  }
+  quiz.typed = String(text);
+  recordAnswer(result === "right");
+}
+function nextQuiz() {
+  if (!quiz || quiz.phase !== "questions" || !quiz.answered) return;
+  if (quiz.i + 1 >= quiz.qs.length) {
+    if (quiz.board) { quiz.phase = "board"; renderQuiz(true); }
+    else go("quiz-done");
+    return;
+  }
+  quiz.i += 1;
+  quiz.answered = false;
+  quiz.chosen = null;
+  quiz.almost = false;
+  quiz.typed = "";
+  renderQuiz(true);
+}
+
+// ---- The Vault page (design 2026-11-22-vault-design §5.7) ----
+let vaultShowAll = false;    // Saved for later shows SAVED_SHOWN words until "Show all"; go() sets it back
+const SAVED_SHOWN = 20;
+const NEXT_LABELS = { def2word: "Choose the word", gap: "Fill the gap", type: "Type it" };   // by the question the word will really get
+const VAULT_HEADER_LINE = "New words go through three steps: match, fill the gap, type it. Then they are learned. A check-up three weeks later turns them gold.";
+
+function stepDots(step) {
+  let out = "";
+  for (let i = 0; i < 3; i++) out += `<span class="${i < step ? "on" : ""}"></span>`;
+  return `<span class="day-dots" role="img" aria-label="${step} of 3 steps done">${out}</span>`;
+}
+function vaultWordMain(w, speaker = true) {
+  return `
+              <div class="word-main">
+                <div class="word-w">${esc(w.word)}${speaker ? ` ${speakBtn(w.word)}` : ""}</div>
+                <div class="word-def"><span class="lang">EN</span>${esc(w.en)} <span class="no"><span class="lang">NO</span><span lang="nb">${esc(w.no)}</span></span></div>
+              </div>`;
+}
+function learningRow(w) {
+  const step = wordStep(w);
+  const when = isDue(w) ? "ready" : whenLabel(wordDue(w));
+  return `
+            <div class="word-row" data-key="${esc(wordKey(w))}">${vaultWordMain(w)}
+              <div class="word-next">${stepDots(step)}<span class="small">${NEXT_LABELS[questionFor(w, "step").type] || QUIZ_TYPE_LABELS[questionFor(w, "step").type]} · ${esc(when)}</span></div>
+            </div>`;
+}
+function savedRow(w) {
+  const key = wordKey(w), starred = w.star > 0;
+  return `
+            <div class="word-row" data-key="${esc(key)}">
+              <button type="button" class="star-btn" data-star="${esc(key)}" aria-pressed="${starred ? "true" : "false"}" aria-label="Learn ${esc(w.word)} next">${starred ? icon("star", "ic", ICON_DUO) : icon("star")}</button>${vaultWordMain(w, false)}
+              <div class="word-actions">
+                <button type="button" class="btn-link know-btn" data-know="${esc(key)}" aria-label="I know this word: ${esc(w.word)}">I know this word</button>
+                <span class="remove-box"><button type="button" class="btn-link remove-link" data-remove="${esc(key)}" aria-label="Remove ${esc(w.word)}">Remove</button></span>
+              </div>
+            </div>`;
+}
+function learnedRow(w) {
+  const mark = wordStep(w) >= 4 ? `<span class="stage-pill gold">Gold</span>`
+    : `<span class="small">Check-up ${isDue(w) ? "ready" : esc(whenLabel(wordDue(w)))}</span>`;
+  return `
+            <div class="word-row" data-key="${esc(wordKey(w))}">${vaultWordMain(w)}
+              <div class="word-next">${mark}</div>
+            </div>`;
+}
+function vaultGroup(stage, label, count, rows, extra = "") {
+  return `
+      <div class="vault-group" data-stage="${stage}">
+        <h2 class="section-title" tabindex="-1"><span class="stage-pill ${stage}">${label}</span> <span class="muted">${count}</span>${extra}</h2>
+        <div class="card word-list">${rows}</div>
+      </div>`;
+}
+function viewVault() {
+  const words = state.savedWords;
+  const byDue = (a, b) => (wordDue(a) || "").localeCompare(wordDue(b) || "");
+  const learning = learningNow().sort((a, b) => byDue(a, b) || wordStep(b) - wordStep(a));
+  const waiting = waitingWords();
+  const learned = words.filter(w => wordStep(w) === 3).sort(byDue);
+  const gold = words.filter(w => wordStep(w) >= 4);
+  const ready = readyCount();
+  let action;
+  if (words.length < VAULT_UNLOCK) {
+    const need = VAULT_UNLOCK - words.length;
+    action = `<p class="vault-lock">Save ${need} more word${need === 1 ? "" : "s"} to start practising. Click dotted words while you read.</p>`;
+  } else if (ready > 0) {
+    action = `<button type="button" class="btn btn-primary" id="btn-practise">Practise ${plural(ready, "word", "words")}</button>`;
+  } else {
+    const next = nextReadyDay();
+    const line = next ? `Your next words are ready ${esc(whenLabel(next))}.` : "Save more words while you read.";
+    const practised = words.some(w => wordStep(w) >= 1);
+    action = `<p class="vault-lock">All done for now. ${line}</p>
+      <div class="row-actions">
+        <button type="button" class="btn btn-primary" id="btn-vault-read">Read a text</button>
+        ${practised ? `<button type="button" class="btn btn-secondary" id="btn-practise">Practise anyway</button>` : ""}
+      </div>`;
+  }
+  const shown = vaultShowAll ? waiting : waiting.slice(0, SAVED_SHOWN);
+  const showAll = waiting.length > shown.length
+    ? `<div class="show-all"><button type="button" class="btn-link" id="btn-show-all">Show all ${waiting.length}</button></div>` : "";
+  const groups = [
+    learning.length && vaultGroup("learning", STAGE_LABELS.learning, learning.length, learning.map(learningRow).join("")),
+    waiting.length && vaultGroup("saved", STAGE_LABELS.saved, waiting.length, shown.map(savedRow).join("") + showAll,
+      ` <span class="small muted">starred first, then newest</span>`),
+    (learned.length || gold.length) && vaultGroup("learned", STAGE_LABELS.learned, learned.length + gold.length, learned.concat(gold).map(learnedRow).join("")),
+  ].filter(Boolean).join("");
+  return `
+    <section class="home-grid">
+      <div class="card vault-head">
+        <div class="big-stat"><strong>${wordsLearned()}</strong><span>Words learned</span></div>
+        <div class="vault-info">
+          <h1 tabindex="-1">Your Vault</h1>
+          <p class="muted">${VAULT_HEADER_LINE}</p>
+          <div class="stage-counts">
+            <span class="stage-pill learning">${STAGE_LABELS.learning} ${learning.length > LEARNING_PLACES ? learning.length : `${learning.length} of ${LEARNING_PLACES}`}</span>
+            <span class="stage-pill saved">${STAGE_LABELS.saved} ${waiting.length}</span>
+            <span class="stage-pill learned">${STAGE_LABELS.learned} ${learned.length + gold.length}</span>
+            ${gold.length ? `<span class="stage-pill gold">${STAGE_LABELS.gold} ${gold.length}</span>` : ""}
+          </div>
+          <div class="vault-action">${action}</div>
+        </div>
+      </div>
+      ${words.length ? groups : `
+        <div class="card empty-box"><div class="empty-icon">${icon("bookmark")}</div><p><strong>Your Vault is empty.</strong></p><p>Click dotted words while you read. They are saved here so you can practise them.</p><button type="button" class="btn btn-primary" id="btn-vault-read">Choose a text</button></div>`}
+    </section>`;
+}
+// Redraw the Vault page and put focus back: on the same word's button (sel), else on that button in the
+// Saved-for-later row now at the same place (at), else the last one, else a section heading, else the page heading.
+const savedRows = () => [...document.querySelectorAll('.vault-group[data-stage="saved"] .word-row')];
+function redrawVault(key, sel, at) {
+  render();
+  const same = key && document.querySelector(`.word-row[data-key="${CSS.escape(key)}"] ${sel}`);
+  const list = savedRows().map(r => r.querySelector(sel)).filter(Boolean);
+  const el = same || list[Math.min(at, list.length - 1)]
+    || document.querySelector('.vault-group[data-stage="saved"] h2') || document.querySelector(".vault-group h2") || document.querySelector(".vault-info h1");
+  if (el) el.focus();
+}
+function bindVault() {
+  const readBtn = $("btn-vault-read");
+  if (readBtn) readBtn.addEventListener("click", () => go("home"));
+  const p = $("btn-practise");
+  if (p) p.addEventListener("click", startQuiz);
+  const all = $("btn-show-all");
+  if (all) all.addEventListener("click", () => { vaultShowAll = true; redrawVault(null, ".star-btn", SAVED_SHOWN); });
+  const indexOf = key => savedRows().findIndex(r => r.dataset.key === key);
+  document.querySelectorAll("[data-star]").forEach(b => b.addEventListener("click", () => {
+    const key = b.dataset.star, at = indexOf(key);
+    toggleStar(key);
+    redrawVault(key, ".star-btn", at);
+  }));
+  document.querySelectorAll("[data-know]").forEach(b => b.addEventListener("click", () => {
+    const key = b.dataset.know, at = indexOf(key);
+    knowWord(key);
+    redrawVault(key, ".know-btn", at);
+  }));
+  document.querySelectorAll("[data-remove]").forEach(b => {
+    b.addEventListener("click", () => {
+      const box = b.parentElement;
+      const key = b.dataset.remove;
+      box.innerHTML = `<span class="small">Remove?</span> <button type="button" class="btn-link danger-link" data-yes>Yes</button> <button type="button" class="btn-link" data-no>No</button>`;
+      const at = indexOf(key);
+      box.querySelector("[data-yes]").addEventListener("click", () => {
+        state.savedWords = state.savedWords.filter(w => wordKey(w) !== key);
+        save();
+        redrawVault(key, ".remove-link", at);
+      });
+      box.querySelector("[data-no]").addEventListener("click", () => redrawVault(key, ".remove-link", at));
+      box.querySelector("[data-no]").focus();
+    });
+  });
+}
+
+function viewQuiz() {
+  return `<section class="card quiz-card" id="quiz-card"></section>`;
+}
+// focusIt: after an answer focus goes to the feedback, after "Next word" to the new prompt (or the text box); never on the first draw (go() does that).
+function renderQuiz(focusIt = false) {
+  const card = $("quiz-card");
+  if (!card || !quiz) return;
+  if (quiz.phase === "board") return renderBoard(card, focusIt);
+  if (quiz.phase === "board-done") return renderBoardDone(card, focusIt);
+  const q = quiz.qs[quiz.i];
+  const w = state.savedWords.find(x => wordKey(x) === q.key) || { word: q.key, en: "", no: "" };
+  const typed = isTyped(q);
+  const keys = ["A", "B", "C", "D"];
+  const dots = quiz.qs.map((_, i) => {
+    if (i < quiz.log.length) return `<span class="${quiz.log[i].correct ? "full" : "zero"}"></span>`;
+    return `<span class="${i === quiz.i ? "now" : ""}"></span>`;
+  }).join("");
+  const gapHtml = () => `<span class="quiz-gap">“${esc(q.gap).replace(/_____/g, '<span class="gap">_____</span>')}”</span>`;
+  let prompt;
+  if (q.type === "type") prompt = `Type the word that means: <span class="quiz-def">“${esc(w.en)}”</span>`;
+  else if (q.type === "check") prompt = `Check-up: type the missing word${gapHtml()}`;
+  else if (q.type === "def2word") prompt = `Which word means: <span class="quiz-def">“${esc(w.en)}”</span>`;
+  else if (q.type === "word2def") prompt = `What does <span class="quiz-word">${esc(w.word)}</span> mean?`;
+  else prompt = `Which word fits the gap?${gapHtml()}`;
+  let body;
+  if (typed) {
+    const off = quiz.answered ? "disabled" : "";
+    body = `
+      ${q.type === "type" && !q.hideNo ? `<p class="type-no" id="type-no">Norwegian: <span lang="nb">${esc(w.no)}</span></p>` : ""}
+      <div class="type-box">
+        <label class="field-label" for="type-input">Your answer</label>
+        <input type="text" class="field" id="type-input" value="${esc(quiz.typed)}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+          aria-describedby="q-prompt${q.type === "type" && !q.hideNo ? " type-no" : ""} type-hint" ${off}>
+        <button type="button" class="btn btn-primary" id="btn-type-check" ${off}>Check</button>
+        <p class="small muted" id="type-hint">Starts with “${esc(q.hint.first)}”, ${q.hint.letters} letters</p>
+        <p class="type-msg" role="status"></p>
+      </div>`;
+  } else {
+    body = `<div class="options">${q.options.map((o, i) => {
+      let cls = "opt";
+      if (quiz.answered) {
+        if (i === q.correct) cls += " correct";
+        else if (i === quiz.chosen) cls += " wrong";
+      }
+      return `<button type="button" class="${cls}" data-pos="${i}" ${quiz.answered ? "disabled" : ""}><span class="key">${keys[i]}</span><span>${esc(o)}</span></button>`;
+    }).join("")}</div>`;
+  }
+  let feedback = "";
+  if (quiz.answered) {
+    const r = quiz.log[quiz.i];
+    const last = quiz.i + 1 >= quiz.qs.length;
+    const answer = typed ? q.answers[0] : q.options[q.correct];
+    const nextLabel = !last ? "Next word" : quiz.board ? "Next: new words" : "See your result";
+    feedback = `
+      <div class="feedback ${r.correct ? "good" : "bad"}" role="status" tabindex="-1">
+        <h3>${r.correct ? "Correct!" : `Not quite. The answer is “${esc(answer)}”.`}</h3>
+        <p><strong>${esc(w.word)}</strong> ${speakBtn(w.word)}: ${esc(w.en)}<br><span class="lang">NO</span><em lang="nb">${esc(w.no)}</em></p>
+        <p class="small">${esc(r.note)}</p>
+        <div class="actions"><button type="button" class="btn btn-primary btn-block" id="btn-quiz-next">${nextLabel}</button></div>
+      </div>`;
+  }
+  const then = quiz.board ? ` · then ${quiz.board.keys.length} new words` : "";
+  const keyLine = typed
+    ? `Keys: <kbd>Enter</kbd> to check · <kbd>Enter</kbd> to go on`
+    : `Keys: <kbd>1</kbd>–<kbd>4</kbd> or <kbd>A</kbd>–<kbd>D</kbd> to answer · <kbd>Enter</kbd> to go on`;
+  card.innerHTML = `
+    <div class="q-top">
+      <span class="q-count">Word ${quiz.i + 1} of ${quiz.qs.length}${then}</span>
+      <span class="skill-chip">${QUIZ_TYPE_LABELS[q.type]}</span>
+    </div>
+    <div class="q-dots" aria-hidden="true">${dots}</div>
+    <h2 class="q-prompt" id="q-prompt" tabindex="-1">${prompt}</h2>
+    ${body}
+    ${feedback}
+    <div class="kbd-hint">${keyLine}</div>`;
+  card.querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => answerQuiz(parseInt(b.dataset.pos, 10))));
+  const box = $("type-input");
+  if (box) box.addEventListener("keydown", e => {
+    if (e.key !== "Enter") return;
+    e.preventDefault(); e.stopPropagation();   // the same Enter must not also go on from the feedback
+    submitTyped(box.value);
+  });
+  const ck = $("btn-type-check");
+  if (ck) ck.addEventListener("click", () => submitTyped($("type-input").value));
+  const nx = $("btn-quiz-next");
+  if (nx) nx.addEventListener("click", nextQuiz);
+  if (focusIt) (card.querySelector(".feedback") || (box && !box.disabled ? box : null) || card.querySelector(".q-prompt")).focus({ preventScroll: true });
+  if (focusIt && nx) keepInView(nx);
+}
+// Focus stays where it is; the button that goes on is scrolled fully into view (no smooth scroll, so reduced motion is respected).
+function keepInView(btn) { btn.scrollIntoView({ block: "nearest", behavior: "instant" }); }
+
+// ---- The matching board (entry): words in board order, meanings shuffled ----
+function boardWord(key) {
+  return state.savedWords.find(x => wordKey(x) === key) || { word: key, en: "", no: "" };
+}
+function renderBoard(card, focusIt) {
+  const bd = quiz.board;
+  const cardBtn = (side, key, text) => {
+    const done = bd.matched.includes(key);
+    const picked = bd.picked && bd.picked.side === side && bd.picked.key === key;
+    return `<button type="button" class="board-${side}${done ? " matched" : ""}" data-key="${esc(key)}" aria-pressed="${picked ? "true" : "false"}" ${done ? "disabled" : ""}>${esc(text)}<span class="sr-only">${done ? " (matched)" : ""}</span></button>`;
+  };
+  card.innerHTML = `
+    <div class="q-top">
+      <span class="q-count">${bd.keys.length} new words</span>
+      <span class="skill-chip">Match the words</span>
+    </div>
+    <h2 class="q-prompt" tabindex="-1">Match each word to its meaning</h2>
+    <p class="muted">Pick a word, then its meaning.</p>
+    <div class="board">
+      <div class="board-col" role="group" aria-label="Words">${bd.keys.map(k => cardBtn("word", k, boardWord(k).word)).join("")}</div>
+      <div class="board-col" role="group" aria-label="Meanings">${bd.order.map(k => cardBtn("mean", k, boardWord(k).en)).join("")}</div>
+    </div>
+    <p id="board-status" class="small" role="status"></p>`;
+  card.querySelectorAll(".board-word, .board-mean").forEach(b =>
+    b.addEventListener("click", () => pickBoard(b.classList.contains("board-word") ? "word" : "mean", b.dataset.key)));
+  if (focusIt) card.querySelector(".q-prompt").focus({ preventScroll: true });
+}
+// Bring the board's buttons in line with quiz.board (in place, so focus and the status line stay).
+function syncBoard() {
+  const bd = quiz.board;
+  document.querySelectorAll("#quiz-card .board-word, #quiz-card .board-mean").forEach(b => {
+    const side = b.classList.contains("board-word") ? "word" : "mean", key = b.dataset.key;
+    const done = bd.matched.includes(key);
+    b.setAttribute("aria-pressed", bd.picked && bd.picked.side === side && bd.picked.key === key ? "true" : "false");
+    b.classList.toggle("matched", done);
+    b.disabled = done;
+    b.querySelector(".sr-only").textContent = done ? " (matched)" : "";
+  });
+}
+function boardSay(text) {
+  const st = $("board-status");
+  if (!st) return;
+  if (st.textContent !== text) { st.textContent = text; return; }
+  st.textContent = "";   // the same words again: clear first, so a screen reader says them again
+  setTimeout(() => { st.textContent = text; }, 60);
+}
+function pickBoard(side, key) {
+  if (!quiz || quiz.phase !== "board" || !quiz.board) return;
+  const bd = quiz.board;
+  if (!bd.keys.includes(key) || bd.matched.includes(key)) return;
+  if (!bd.picked || bd.picked.side === side) {
+    bd.picked = bd.picked && bd.picked.key === key ? null : { side, key };   // a second click on the same card lets go
+    syncBoard();
+    return;
+  }
+  const other = bd.picked;
+  bd.picked = null;
+  if (other.key === key) {
+    bd.matched.push(key);
+    syncBoard();
+    boardSay(`Matched: ${boardWord(key).word}`);
+    if (bd.matched.length === bd.keys.length) {
+      finishBoard();
+      renderQuiz(true);
+      return;
+    }
+    const active = document.activeElement;
+    if (!active || active.disabled) {
+      const next = document.querySelector("#quiz-card .board-word:not([disabled])");
+      if (next) next.focus();
+    }
+  } else {
+    bd.mistakes += 1;
+    syncBoard();
+    boardSay("Not a pair. Try again.");
+    if (!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) {
+      const pair = [document.querySelector(`#quiz-card .board-${other.side}[data-key="${CSS.escape(other.key)}"]`),
+                    document.querySelector(`#quiz-card .board-${side}[data-key="${CSS.escape(key)}"]`)].filter(Boolean);
+      pair.forEach(b => b.classList.add("shake"));
+      setTimeout(() => pair.forEach(b => b.classList.remove("shake")), 400);
+    }
+  }
+}
+// Every word on a finished board enters Learning now, once.
+function finishBoard() {
+  if (!quiz || !quiz.board || quiz.board.entered) return;
+  quiz.board.entered = true;
+  quiz.board.keys.forEach(k => {
+    const w = state.savedWords.find(x => wordKey(x) === k);
+    if (w) quiz.log.push(applyAnswer(w, "enter", true));
+  });
+  quiz.phase = "board-done";
+  freshAch = freshAch.concat(checkAchievements());
+  renderHeader();
+}
+function renderBoardDone(card, focusIt) {
+  card.innerHTML = `
+    <div class="board-summary">
+      <h2 class="q-prompt" tabindex="-1">All matched!</h2>
+      <p>These words are now in Learning now.</p>
+      <div class="word-list">${quiz.board.keys.map(k => {
+        const w = boardWord(k);
+        return `<div class="word-row"><div class="word-main"><div class="word-w">${esc(w.word)} ${speakBtn(w.word)}</div>
+          <div class="word-def"><span class="lang">NO</span><span lang="nb">${esc(w.no)}</span></div></div></div>`;
+      }).join("")}</div>
+      <div class="actions"><button type="button" class="btn btn-primary" id="btn-board-done">See your result</button></div>
+    </div>`;
+  $("btn-board-done").addEventListener("click", () => go("quiz-done"));
+  if (focusIt) { $("btn-board-done").focus({ preventScroll: true }); keepInView($("btn-board-done")); }
+}
+
+// ---- The round result ----
+const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+function roundSummary(log) {
+  if (log.length && log.every(r => r.kind === "practice")) return "Practice done. Practice does not move words.";
+  const steps = log.filter(r => r.kind === "step");
+  const learned = steps.filter(r => r.afterStep === 3 && r.beforeStep < 3).length;
+  const gold = steps.filter(r => r.afterStep === 4 && r.beforeStep < 4).length;
+  const up = steps.filter(r => r.afterStep > r.beforeStep).length - learned - gold;
+  const entered = log.filter(r => r.kind === "enter").length;
+  const wrong = steps.filter(r => !r.correct).length;   // entering never fails
+  return [
+    learned && plural(learned, "word learned", "words learned"),
+    gold && `${gold} gold`,
+    up && plural(up, "word moved up", "words moved up"),
+    entered && plural(entered, "new word in Learning now", "new words in Learning now"),
+    wrong && plural(wrong, "word to try again", "words to try again"),
+  ].filter(Boolean).join(" · ");
+}
+function viewQuizDone() {
+  if (!quiz) return viewVault();
+  const questions = quiz.log.slice(0, quiz.qs.length);   // the board's entries come after the questions
+  const right = questions.filter(r => r.correct).length;
+  const total = questions.length;
+  const ring = right === total ? "pass" : right >= total / 2 ? "mid" : "low";
+  const title = !total ? "Well matched!" : right === total ? "Perfect round!" : right >= total / 2 ? "Good practice!" : "Keep practising!";
+  const pill = stage => `<span class="stage-pill ${stage}">${STAGE_LABELS[stage]}</span>`;
+  const rows = quiz.log.map(r => {
+    const moved = r.before !== r.after
+      ? `${pill(r.before)}${icon("arrow-right", "ic stage-arrow")}<span class="sr-only"> to </span>${pill(r.after)}`
+      : pill(r.after);
+    const mark = r.kind === "enter" ? "New:" : r.correct ? "Right:" : "Wrong:";
+    return `<div class="word-row"><div class="word-main"><div class="word-w">${r.correct || r.kind === "enter" ? icon("check-circle", "ic res-ic right") : icon("x-circle", "ic res-ic wrong")}<span class="sr-only">${mark} </span>${esc(r.word)}</div></div><div class="word-actions">${moved}</div></div>`;
+  }).join("");
+  const more = readyCount();
+  const nextDay = more ? null : nextReadyDay();
+  const when = nextDay && whenLabel(nextDay);
+  return `
+    <section class="home-grid">
+      <div class="card result-card">
+        ${total ? `<div class="score-ring ${ring}"><div>${right}<small>of ${total} right</small></div></div>` : ""}
+        <div>
+          <h1>${title}</h1>
+          <p class="round-summary">${esc(roundSummary(quiz.log))}</p>
+          ${when && when !== "now" ? `<p class="muted">Your next words are ready ${esc(when)}.</p>` : ""}
+        </div>
+      </div>
+      ${achievementNotice()}
+      <div class="card word-list round-words">${rows}</div>
+      <div class="row-actions">
+        ${more ? `<button type="button" class="btn btn-primary" id="btn-practise">Practise ${plural(more, "more word", "more words")}</button>` : ""}
+        <button type="button" class="btn btn-secondary" id="btn-to-vault">Back to my Vault</button>
+        <button type="button" class="btn btn-secondary" id="btn-to-home">Back to reading</button>
+      </div>
+    </section>`;
+}
+function bindQuizDone() {
+  const p = $("btn-practise");
+  if (p) p.addEventListener("click", startQuiz);
+  const v = $("btn-to-vault");
+  if (v) v.addEventListener("click", () => go("vault"));
+  const h = $("btn-to-home");
+  if (h) h.addEventListener("click", () => go("home"));
+}
 
 // ---------------------------------------------------------------------------
 // Achievements
@@ -3982,7 +4549,8 @@ function handleBackupText(text) {
     </div>`;
   $("bk-cancel").addEventListener("click", closeDialog);
   $("bk-ok").addEventListener("click", () => {
-    state = Object.assign(newState(), b);
+    state = Object.assign(newState(), { vaultVersion: 0 }, b);
+    migrateVault(state);
     SKILLS.forEach(s => { if (!state.skills[s]) state.skills[s] = { pts: 0, n: 0, recent: [] }; });
     loadProblem = null;
     save();
@@ -4115,7 +4683,7 @@ function renderTester() {
     textsDone: state.completed.length,
     unreadAtLevel: LIBRARY.filter(t => t.level === L && !t.placement && !readIds().has(t.id)).length,
     savedWords: state.savedWords.length,
-    vault: `new ${state.savedWords.filter(w => wordStage(w) === "new").length} / practising ${state.savedWords.filter(w => wordStage(w) === "practising").length} / learned ${wordsLearned()} / ready ${readyToPractise().length}`,
+    vault: `saved ${state.savedWords.filter(w => wordStage(w) === "saved").length} / learning ${learningNow().length} / learned ${wordsLearned()} / gold ${state.savedWords.filter(w => wordStage(w) === "gold").length} / ready ${readyCount()}`,
     today: today() + (dayOffset ? ` (+${dayOffset} days)` : ""),
     achievements: `${earnedCount()} of ${achievements().length}`,
     backup: `last at ${state.lastBackupTexts || 0} texts${backupDue() ? " (reminder due)" : ""}`,
@@ -4267,9 +4835,13 @@ function onKey(e) {
   if (["INPUT", "TEXTAREA", "SELECT"].includes(tag)) return;
   if ($("dialog-root").innerHTML) return;
   if (screen === "quiz" && quiz) {
+    if (quiz.phase !== "questions") return;   // on the board, Enter and Space pick the focused card
+    if (e.key === "Enter" && document.activeElement && document.activeElement.tagName === "BUTTON") return;   // a focused button (speaker, Next word) does its own job
+    const q = quiz.qs[quiz.i];
     const qmap = { "1": 0, "2": 1, "3": 2, "4": 3, A: 0, B: 1, C: 2, D: 3 };
     const k = e.key.toUpperCase();
-    if (k in qmap && !quiz.answered && qmap[k] < quiz.qs[quiz.i].options.length) { e.preventDefault(); answerQuiz(qmap[k]); }
+    const options = !isTyped(q) && q.options;
+    if (k in qmap && options && !quiz.answered && qmap[k] < options.length) { e.preventDefault(); answerQuiz(qmap[k]); }
     else if (e.key === "Enter" && quiz.answered) { e.preventDefault(); nextQuiz(); }
     return;
   }
