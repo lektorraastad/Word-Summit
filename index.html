@@ -147,7 +147,7 @@
   body.theme-sepia .on-panel { --route-done: #D9C39A; --route-todo: #8A765A; --route-contour: #574632; --route-label: #DCCDB2; }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h, 64px) + 8px); }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
   body {
     font-family: var(--sans);
@@ -348,6 +348,7 @@
   .level-tip .st.past { color: var(--good-text, var(--primary)); }
   .level-tip .st.later { color: var(--muted); }
   .beacon-pop .beacon-here { color: var(--pop-text); }
+  .level-tip, .beacon-pop { overflow-y: auto; overscroll-behavior: contain; }
 
   /* ---------- Home: level card ---------- */
   .level-card { padding: 1.75rem 2rem 1.9rem; display: flex; flex-direction: column; gap: 1.1rem; }
@@ -464,6 +465,8 @@
   .test-note { margin-top: 1rem; font-size: 0.9rem; padding: 0.75rem 0.9rem; border-radius: 10px; background: var(--warn-soft); color: var(--warn); }
   .first-test h2 { font-family: var(--serif); font-weight: 600; font-size: 1.3rem; margin-bottom: 0.3rem; letter-spacing: normal; }
   .first-test p { color: var(--muted); }
+  .placement-points .pts { white-space: nowrap; }
+  .home-grid:has(> .placement-card) > .hello { text-align: center; }
   .placement-card { max-width: 860px; margin: 0 auto; padding: 2rem 2.25rem; background: var(--surface); border-radius: var(--radius); display: block; }
   .placement-card h1 { font-size: 2.1rem; margin-bottom: 0.5rem; }
   .placement-card h2 { font-size: 1.5rem; margin-bottom: 0.4rem; }
@@ -756,7 +759,9 @@
   @media (max-width: 600px) {
     .board { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
     .board-word, .board-mean { padding: 0.6rem 0.7rem; overflow-wrap: break-word; }
-    .board-word { font-size: 1.02rem; hyphens: auto; }
+    .board-word { font-size: 1.02rem; }
+    .board-word.long { font-size: 0.82rem; padding-inline: 0.5rem; letter-spacing: -0.01em; }   /* a long word stays whole instead of hyphen-breaking (polish, 23 Nov 2026) */
+    .board-word.xlong { font-size: 0.76rem; }
   }
   #board-status { min-height: 1.4em; margin-top: 0.6rem; font-weight: 700; color: var(--muted); }
   .board-summary .word-list { padding: 0; margin: 0.4rem 0 1.1rem; }
@@ -866,7 +871,7 @@
   .backup-seg button { border: 1px solid var(--border); background: var(--surface); }
   .panel .foot { margin-top: 1rem; padding-top: 0.85rem; border-top: 1px solid var(--border-soft); font-size: 0.875rem; color: var(--muted); }
   .backdrop { position: fixed; inset: 0; z-index: 90; background: rgba(11, 26, 38, 0.55); display: grid; place-items: center; padding: 1rem; }
-  .dialog { width: 100%; max-width: 460px; padding: 1.75rem; }
+  .dialog { width: 100%; max-width: 460px; padding: 1.75rem; max-height: calc(100dvh - 2rem); overflow-y: auto; overscroll-behavior: contain; }   /* scrolls inside itself on short screens (polish, 23 Nov 2026) */
   .dialog h2 { font-size: 1.4rem; margin-bottom: 0.55rem; display: flex; align-items: center; gap: 0.55rem; }
   .dialog h2 svg.ic { width: 24px; height: 24px; color: var(--primary); }
   #reset-title svg.ic, #info-title svg.ic { color: var(--danger); }
@@ -918,9 +923,12 @@
   .missed h2 { font-size: 1.35rem; margin-bottom: 0.2rem; }
   .missed > .muted { margin-bottom: 0.6rem; }
   /* "How to" cards (spec §6) */
-  .howto-btn { border: 1px solid var(--border); background: var(--surface); color: var(--primary); font: inherit; font-size: 0.8rem; font-weight: 700;
+  /* Polish 23 Nov 2026: a softly filled pill, so it is easy to spot while answering (Roy chose the soft fill; no icon: it would push the question header onto two lines at 125%) */
+  .howto-btn { display: inline-flex; align-items: center; gap: 0.2rem; vertical-align: middle; min-height: 32px;
+    border: 1px solid color-mix(in srgb, var(--primary) 35%, var(--surface)); background: color-mix(in srgb, var(--primary) 11%, var(--surface)); color: var(--primary);
+    font: inherit; font-size: 0.8rem; font-weight: 700; line-height: 1.1;
     padding: 0.15rem 0.6rem; border-radius: 999px; cursor: pointer; white-space: nowrap; }
-  .howto-btn:hover { background: var(--primary-soft); }
+  .howto-btn:hover { background: color-mix(in srgb, var(--primary) 20%, var(--surface)); border-color: var(--primary); }
   .q-top { flex-wrap: wrap; }
   /* The skill name and its How to button always share a row (design 2026-11-18-three-small-fixes) */
   .q-skill { display: inline-flex; align-items: center; gap: 0.4rem; flex-wrap: nowrap; }
@@ -936,6 +944,8 @@
   .howto-tip { margin-bottom: 1rem; }
   .skill-focus { background: var(--warn-soft); border-radius: 12px; padding: 0.55rem 0.9rem; margin: 0 0 0.8rem; font-size: 0.95rem; }
   .skill-focus .howto-btn { margin-left: 0.3rem; }
+  /* inside a line of text the taller pill must not make the line taller */
+  .skill-focus .howto-btn, .lc-focus-line .howto-btn, .badge-desc .howto-btn { margin-block: -0.3rem; }
   .btn-to-choices { margin-top: 0.9rem; }
   #next-texts { scroll-margin-top: 80px; }
   .feedback .praise { font-weight: 700; color: var(--success); margin: 0.2rem 0 0.3rem; }
@@ -1023,7 +1033,21 @@
     .level-card .lc-text h2, .level-card .lc-text p, .level-card .progress-line .label, .level-card .route-hint,
     .welcome-hero h1, .welcome-hero .lead, .welcome-hero .route-hint { text-wrap: balance; }
   }
+  /* School laptops at 125% (about 1093x500): tighter Home so the first text's title shows without scrolling (polish, 23 Nov 2026) */
+  @media (max-height: 560px) and (min-width: 1050px) {
+    main { padding-top: 0.55rem; }
+    .home-grid { gap: 0.7rem; }
+    .hello { font-size: 1.45rem; }
+    .level-card { padding: 0.75rem 1.75rem 0.8rem; row-gap: 0.45rem; grid-template-columns: minmax(250px, 40%) minmax(0, 1fr); }
+    .level-card .route { max-height: 175px; }
+    .vault-home { padding: 0.5rem 1.4rem; }
+    .section-title { margin-bottom: 0.5rem; }
+    .choice-card { padding-top: 1rem; gap: 0.45rem; }
+  }
   @media (max-width: 900px) {
+    .q-panel .q-top { top: var(--header-h, 0px); }   /* sticks below the sticky header, not under it (polish, 23 Nov 2026) */
+    /* and keyboard focus scrolled into view lands below that sticky row, not under it (WCAG 2.4.11) */
+    html:has(#q-panel) { scroll-padding-top: calc(var(--header-h, 64px) + 6.5rem); }
     .topbar { padding: 0.6rem 1rem; flex-wrap: wrap; }
     main { padding: 1.5rem 1rem 3rem; }
     .q-layout { grid-template-columns: 1fr; }
@@ -1057,7 +1081,7 @@
   .stage-arrow { width: 1em; height: 1em; margin: 0 0.3rem; vertical-align: -0.15em; color: var(--muted); }
   .journey-arrow svg.ic { width: 1em; height: 1em; vertical-align: -0.15em; }
   #copy-msg svg.ic { width: 1em; height: 1em; vertical-align: -0.15em; color: var(--success); }
-  .howto-btn { min-height: 30px; display: inline-flex; align-items: center; }
+  .howto-btn { min-height: 32px; display: inline-flex; align-items: center; }
   /* touch and phones: the small buttons grow to 44 px (item 16 of the 14 November review) */
   @media (max-width: 600px), (pointer: coarse) {
     .howto-btn, #btn-other-texts, #btn-reset { min-height: 44px; min-width: 44px; }
@@ -1119,7 +1143,7 @@
 
 const TEST_MODE = false;
 const DELIVERY = "hosted"; // "hosted" (GitHub Pages) or "file" (shared as a file)
-const LIBRARY_VERSION = "2026-11-23.1946";
+const LIBRARY_VERSION = "2026-11-23.2254";
 
 // The library is stored scrambled so texts and answers aren't readable in the page source.
 // "RCL2:" (18 November 2026): each character from space to ~ swapped through LIB_SWAP, so the web server can still compress the page.
@@ -1405,7 +1429,7 @@ function openHowTo(skill) {
       : document.querySelector(`.howto-btn[data-howto="${skill}"]`) || document.querySelector("#app h1, #app h2");
     if (el) el.focus({ preventScroll: true });
   };
-  $("howto-close").focus();
+  $("howto-close").focus({ preventScroll: true });   // the card opens at its top, even when it scrolls on a short screen
   $("howto-close").addEventListener("click", closeDialog);
   $("howto-backdrop").addEventListener("click", e => { if (e.target.id === "howto-backdrop") closeDialog(); });
 }
@@ -2030,7 +2054,7 @@ function go(name) {
   hideVocab();
   hideRouteTips();
   render();
-  window.scrollTo({ top: 0, behavior: "auto" });
+  window.scrollTo({ top: 0, behavior: "instant" });   // a new screen starts at the top at once (html has smooth scrolling)
   focusMain();
 }
 // The tab title names the screen, so a screen reader and the browser history say where the student is.
@@ -2205,7 +2229,10 @@ function renderHeader() {
 // The header is sticky, so tell the browser how tall it is: a focused item is then never left hidden underneath it.
 function syncHeaderHeight() {
   const h = document.querySelector(".topbar");
-  if (h) document.documentElement.style.scrollPaddingTop = `${Math.round(h.getBoundingClientRect().height) + 8}px`;
+  if (!h) return;
+  const px = Math.round(h.getBoundingClientRect().height);
+  // scroll-padding-top (header + 8 px, more on narrow question screens) is set in CSS from this value
+  document.documentElement.style.setProperty("--header-h", `${px}px`);
 }
 
 let newestSeen = null;
@@ -2363,7 +2390,7 @@ function viewPlacementNext() {
   const done = P.log.length;
   const last = P.log[done - 1];
   const challenge = P.stage === "P3";
-  const title = challenge ? "Great reading! Here is one extra challenge." : `Text ${done} done. Well done!`;
+  const title = challenge ? "Great reading! Here is one extra challenge." : `Text ${done} done!`;
   const lead = challenge
     ? "You did very well, so you get one more text. It is harder than the others. Just do your best. It can only help you."
     : "Now read one more text.";
@@ -2390,7 +2417,7 @@ function bindPlacementButtons() {
 function placementPointsList() {
   const log = state.placement && state.placement.log ? state.placement.log : [];
   if (!log.length) return "";
-  const items = log.map((l, i) => { const t = findText(l.id); return `<li>Text ${i + 1}: ${t ? esc(t.title) : esc(l.id)}: ${fmtPts(l.score)} of 5 points</li>`; }).join("");
+  const items = log.map((l, i) => { const t = findText(l.id); return `<li>Text ${i + 1}: ${t ? esc(t.title) : esc(l.id)}: <span class="pts">${fmtPts(l.score)} of 5 points</span></li>`; }).join("");
   return `<ul class="placement-points" style="margin:0.6rem 0 0 1.1rem;">${items}</ul>`;
 }
 function viewPlacementDone() {
@@ -2817,21 +2844,41 @@ function levelStatus(i, cur, high) {
   return ["later", "Not reached yet."];
 }
 let tipPinned = null, tipHideT = null, beaconFor = null, beaconPinned = false, beaconHideT = null;
-function placePop(el, g, above) {
-  el.hidden = false; el.classList.remove("hidden");
-  const r = g.getBoundingClientRect(), w = el.offsetWidth, h = el.offsetHeight;
-  let left = r.left + r.width / 2 - w / 2 + window.scrollX;
-  left = Math.max(window.scrollX + 8, Math.min(left, window.scrollX + document.documentElement.clientWidth - w - 8));
-  let top = above ? r.top + window.scrollY - h - 8 : r.bottom + window.scrollY + 8;
-  if (above && top < window.scrollY + 8) top = r.bottom + window.scrollY + 8;
-  el.style.left = `${left}px`; el.style.top = `${top}px`;
+// Place a popover next to g, inside the visible window (below the sticky header) and clear of `avoid`
+// (the beacon, for level tips). Tries `prefer` first, then the other sides; if none fits, the side with
+// the most room, clamped into the window, with a max height so it can scroll inside itself.
+function placePop(el, g, prefer, avoid) {
+  el.hidden = false; el.classList.remove("hidden"); el.style.maxHeight = "";
+  const r = g.getBoundingClientRect(), a = avoid ? avoid.getBoundingClientRect() : null;
+  const head = document.querySelector(".topbar"), M = 8, gap = 8;
+  const vw = document.documentElement.clientWidth, vh = window.innerHeight;
+  const minT = (head ? Math.max(0, head.getBoundingClientRect().bottom) : 0) + M, maxB = vh - M;
+  const w = el.offsetWidth, h = el.offsetHeight;
+  const clampX = x => Math.max(M, Math.min(x, vw - w - M)), clampY = y => Math.max(minT, Math.min(y, maxB - h));
+  const at = side => side === "above" ? { x: clampX(r.left + r.width / 2 - w / 2), y: r.top - h - gap }
+    : side === "below" ? { x: clampX(r.left + r.width / 2 - w / 2), y: r.bottom + gap }
+    : side === "left" ? { x: r.left - w - gap, y: clampY(r.top + r.height / 2 - h / 2) }
+    : { x: r.right + gap, y: clampY(r.top + r.height / 2 - h / 2) };
+  const fits = p => p.x >= M - 0.5 && p.x + w <= vw - M + 0.5 && p.y >= minT - 0.5 && p.y + h <= maxB + 0.5;
+  const clear = p => !a || p.x >= a.right || a.left >= p.x + w || p.y >= a.bottom || a.top >= p.y + h;
+  const order = [prefer, ...["above", "below", "left", "right"].filter(s => s !== prefer)];
+  let pos = order.map(at).find(p => fits(p) && clear(p));
+  if (!pos) {
+    // nothing fits whole: use the room above or below the target, whichever is larger
+    const up = r.top - gap - minT, down = maxB - r.bottom - gap;
+    const room = Math.max(up, down, 120);
+    el.style.maxHeight = `${room}px`;
+    const hh = Math.min(h, room);
+    pos = { x: clampX(r.left + r.width / 2 - w / 2), y: up > down ? Math.max(minT, r.top - gap - hh) : Math.min(r.bottom + gap, maxB - hh) };
+  }
+  el.style.left = `${pos.x + window.scrollX}px`; el.style.top = `${pos.y + window.scrollY}px`;
 }
 function showLevelTip(g) {
   const i = +g.dataset.i, cur = +g.dataset.cur, high = +g.dataset.high, L = LADDER[i];
   const [cls, st] = levelStatus(i, cur, high);
   const tip = $("level-tip");
   tip.innerHTML = `<div class="tl"><b>${esc(L)}</b><span>${esc(LEVEL_TIPS[L][0])}</span></div><p>${esc(LEVEL_TIPS[L][1])}</p><div class="st ${cls}">${esc(st)}</div>`;
-  placePop(tip, g, true);
+  placePop(tip, g, "above", g.closest("svg").querySelector(".beacon-btn"));
   document.querySelectorAll(".lvl[aria-describedby]").forEach(x => x.removeAttribute("aria-describedby"));
   g.setAttribute("aria-describedby", "level-tip");
 }
@@ -2856,7 +2903,7 @@ function showBeaconPop(g, pin) {
     <div class="line no"><span class="lang">NO</span><span lang="nb">varde (vardebål)</span></div>
     <div class="saved beacon-here">${esc(here)}</div>`;
   $("beacon-x").addEventListener("click", e => { e.stopPropagation(); const back = beaconFor; hideBeaconPop(); if (back) back.focus(); });
-  placePop(pop, g, false);
+  placePop(pop, g, "below");
   beaconFor = g; beaconPinned = pin !== false; g.setAttribute("aria-expanded", "true");
 }
 function hideBeaconPop() {
@@ -2989,6 +3036,14 @@ function showVocab(el) {
   let top = r.bottom + window.scrollY + 8;
   const h = pop.offsetHeight || 120;
   if (r.bottom + h + 16 > window.innerHeight) top = r.top + window.scrollY - h - 8;
+  else {
+    // below would cover the next dotted word: open above instead when there is room under the header
+    const words = [...document.querySelectorAll(".text-body .vocab")], nx = words[words.indexOf(el) + 1];
+    const n = nx && nx.getBoundingClientRect(), head = document.querySelector(".topbar");
+    const minT = (head ? head.getBoundingClientRect().bottom : 0) + 8, pt = r.bottom + 8;
+    const covers = n && n.top < pt + h && pt < n.bottom && n.left < left - window.scrollX + width && left - window.scrollX < n.right;
+    if (covers && r.top - h - 8 >= minT) top = r.top + window.scrollY - h - 8;
+  }
   pop.style.left = `${left}px`;
   pop.style.top = `${top}px`;
   $("vocab-x").addEventListener("click", () => { const back = openVocabEl; hideVocab(); if (back) back.focus({ preventScroll: true }); });
@@ -3074,7 +3129,7 @@ function renderQuestion(focusIt = false) {
   // the student's hardest question type (spec §9): a tip before it, praise when it goes right
   const isHardest = !asPlacement(t) && !a.practice && hardestSkill() === q.skill;
   const focusTip = isHardest && !a.answered && !a.attempts
-    ? `<p class="skill-focus"><strong>Your hardest question type.</strong> Tip: ${esc(SKILL_TIPS[q.skill] || "")} ${howToButton(q.skill)}</p>` : "";
+    ? `<p class="skill-focus"><strong>Your hardest question type.</strong> Tip: ${esc(SKILL_TIPS[q.skill] || "")}</p>` : "";   // How to sits by the skill name just above (Roy, 23 Nov 2026)
   if (a.answered) {
     const pts = a.results[qi];
     const last = qi === t.questions.length - 1;
@@ -4121,7 +4176,7 @@ function savedRow(w) {
 function vaultGroup(stage, label, count, rows, extra = "", cards = false) {
   return `
       <div class="vault-group" data-stage="${stage}">
-        <h2 class="section-title" tabindex="-1"><span class="stage-pill ${stage}">${label}</span> <span class="muted">${count}</span>${extra}</h2>
+        <h2 class="section-title" tabindex="-1"><span class="stage-pill ${stage}">${label}</span> <span class="muted">(${count})</span>${extra}</h2>
         <div class="${cards ? "word-cards" : "card word-list"}">${rows}</div>
       </div>`;
 }
@@ -4155,7 +4210,7 @@ function viewVault() {
   const groups = [
     learning.length && vaultGroup("learning", STAGE_LABELS.learning, learning.length, learning.map(wordCard).join(""), "", true),
     waiting.length && vaultGroup("saved", STAGE_LABELS.saved, waiting.length, shown.map(savedRow).join("") + showAll,
-      ` <span class="small muted">starred first, then newest</span>`),
+      ` <span class="small muted">· starred words first</span>`),
     (learned.length || gold.length) && vaultGroup("learned", STAGE_LABELS.learned, learned.length + gold.length, learned.concat(gold).map(wordCard).join(""), "", true),
   ].filter(Boolean).join("");
   return `
@@ -4301,6 +4356,7 @@ function renderQuiz(focusIt = false) {
     <div class="kbd-hint">${keyLine}</div>`;
   card.querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => answerQuiz(parseInt(b.dataset.pos, 10))));
   const box = $("type-input");
+  if (box) box.addEventListener("input", () => { if (!quiz.answered) quiz.typed = box.value; });
   if (box) box.addEventListener("keydown", e => {
     if (e.key !== "Enter") return;
     e.preventDefault(); e.stopPropagation();   // the same Enter must not also go on from the feedback
@@ -4325,7 +4381,9 @@ function renderBoard(card, focusIt) {
   const cardBtn = (side, key, text) => {
     const done = bd.matched.includes(key);
     const picked = bd.picked && bd.picked.side === side && bd.picked.key === key;
-    return `<button type="button" class="board-${side}${done ? " matched" : ""}" data-key="${esc(key)}" aria-pressed="${picked ? "true" : "false"}" ${done ? "disabled" : ""}>${esc(text)}<span class="sr-only">${done ? " (matched)" : ""}</span></button>`;
+    const most = side === "word" ? Math.max(...String(text).split(/\s+/).map(x => x.length)) : 0;
+    const long = most >= 16 ? " long xlong" : most >= 13 ? " long" : "";
+    return `<button type="button" class="board-${side}${done ? " matched" : ""}${long}" data-key="${esc(key)}" aria-pressed="${picked ? "true" : "false"}" ${done ? "disabled" : ""}>${esc(text)}<span class="sr-only">${done ? " (matched)" : ""}</span></button>`;
   };
   card.innerHTML = `
     <div class="q-top">
@@ -4447,11 +4505,13 @@ function roundSummary(log) {
 }
 function viewQuizDone() {
   if (!quiz) return viewVault();
-  const questions = quiz.log.slice(0, quiz.qs.length);   // the board's entries come after the questions
+  // the board's entries come after the questions; a new word met through a question is an introduction and never
+  // counts in the ring either (entering never fails, Vault design; Roy agreed 23 Nov 2026)
+  const questions = quiz.log.slice(0, quiz.qs.length).filter(r => r.kind !== "enter");
   const right = questions.filter(r => r.correct).length;
   const total = questions.length;
   const ring = right === total ? "pass" : right >= total / 2 ? "mid" : "low";
-  const title = !total ? "Well matched!" : right === total ? "Perfect round!" : right >= total / 2 ? "Good practice!" : "Keep practising!";
+  const title = !total ? (quiz.board ? "Well matched!" : "New words added!") : right === total ? "Perfect round!" : right >= total / 2 ? "Good practice!" : "Keep practising!";
   const pill = stage => `<span class="stage-pill ${stage}">${STAGE_LABELS[stage]}</span>`;
   const rows = quiz.log.map(r => {
     const moved = r.before !== r.after
