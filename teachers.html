@@ -211,12 +211,8 @@ main.guide > * { position: relative; z-index: 1; }
 /* a school laptop at 125% (about 1093 px): the frame reaches further out and pads less, so the example class's table still fits without a sideways box */
 @media (max-width: 1200px) { #reports { margin-inline: -0.85rem; padding-inline: 0.4rem; } }
 #reports .notice.info { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--primary); }
-/* What the levels mean */
-.levels { list-style: none; display: grid; gap: 0; margin: 0.4rem 0 1rem; max-width: 54rem; border-top: 1px solid var(--border-soft); }
-.levels li { display: grid; grid-template-columns: 3.4rem 10.5rem minmax(0, 1fr); gap: 0.2rem 0.8rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border-soft); max-width: none; }
-.lv-code { font-weight: 700; color: var(--primary); }
-.lv-name { font-weight: 600; }
-.rules { max-width: 54rem !important; padding: 0.85rem 1.1rem; border-radius: 12px; background: var(--primary-soft); border-left: 4px solid var(--primary); }
+/* How students move up and down (in Good to know, under Levels) */
+.rules { margin-top: 0.6rem; padding: 0.85rem 1.1rem; border-radius: 12px; background: var(--primary-soft); border-left: 4px solid var(--primary); }
 /* Good to know: four short notes */
 .notes { display: grid; gap: 1.1rem 2.4rem; grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 960px) { .notes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
@@ -230,8 +226,6 @@ a { color: var(--primary); }
   .page-head h1 { font-size: 1.5rem; }
   .page-head p { font-size: 0.95rem; }
   nav.contents ul { padding-inline: 0.6rem; }
-  .levels li { grid-template-columns: 3.4rem minmax(0, 1fr); }
-  .levels li .lv-tip { grid-column: 1 / -1; }
   .guide > section.card { padding: 1.15rem 1rem 1.25rem; }
   .student-addr { margin: 0 -1rem; padding: 0.9rem 1rem 1rem; }
   .student-addr .big { font-size: 1.75rem; }
@@ -264,10 +258,8 @@ a { color: var(--primary); }
   .guide h3 { font-size: 11.5pt; break-after: avoid; }
   .guide ol.steps { gap: 0.3rem; }
   .guide ol.steps li::before { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .guide li, .levels li, .print-qr, .notes > div { break-inside: avoid; }
-  #levels { break-inside: avoid; }
+  .guide li, .print-qr, .notes > div { break-inside: avoid; }
   .print-inline { display: inline; }
-  .levels li { padding: 0.25rem 0; }
   .notes { grid-template-columns: minmax(0, 1fr); gap: 0.5rem; }
   .notes > div { border-top: 0; padding-top: 0; }
   .rules { -webkit-print-color-adjust: exact; print-color-adjust: exact; padding: 0.55rem 0.8rem; }
@@ -320,6 +312,40 @@ a { color: var(--primary); }
       <p class="student-addr"><span>The address for students:</span> <span class="big">www.wordsummit.no</span></p>
     </section>
 
+    <section class="card" id="features" aria-labelledby="features-h">
+      <h2 id="features-h"><span data-icon="book"></span>What students get</h2>
+      <div class="notes">
+      <div>
+      <h3>Five questions, five reading skills</h3>
+      <p>Students read the whole text first. Then five questions open beside it, one for each skill, always in this order: Find the facts, Word meaning, Read between the lines, Why the writer did it and The big idea. Each skill has a How to card with three steps and a tiny example.</p>
+      </div>
+      <div>
+      <h3>Hints and a second try</h3>
+      <p>A wrong first answer gets a hint that fits the mistake and points to the right paragraph. A right second try gives ½ point. 4 of 5 points is a pass.</p>
+      </div>
+      <div>
+      <h3>The Word Vault</h3>
+      <p>A tap on a dotted word shows its meaning in simple English and in Norwegian, and saves it. Short practice rounds move each word from Saved for later through Learning now to Learned and Gold, spaced over days and weeks.</p>
+      </div>
+      <div>
+      <h3>The ten topics</h3>
+      <p>Five story topics and five fact topics, with texts in all ten at every level. Home usually offers one story and one fact text to choose from.</p>
+      </div>
+      <div>
+      <h3>Achievements</h3>
+      <p>51 badges for texts passed, words read, learned and kept, every topic, perfect scores and each reading skill. Badges are never lost.</p>
+      </div>
+      <div>
+      <h3>Reading comfort</h3>
+      <p>Text size, a serif or plain font, light, sepia or dark colours, and wide spacing for students with dyslexia, all in the Aa menu.</p>
+      </div>
+      <div>
+      <h3>The student report</h3>
+      <p>Level, skills and words learned, with a report code students hand in to you. It says plainly that it is not a grade.</p>
+      </div>
+      </div>
+    </section>
+
     <section class="card" id="start" aria-labelledby="start-h">
       <h2 id="start-h"><span data-icon="users"></span>Start a class</h2>
       <ol class="steps">
@@ -350,13 +376,6 @@ a { color: var(--primary); }
       <div class="stack" id="reports-root" data-heading-level="3"></div>
     </section>
 
-    <section class="card" id="levels" aria-labelledby="levels-h">
-      <h2 id="levels-h"><span data-icon="map"></span>What the levels mean</h2>
-      <p>The 11 levels are named after the CEFR scale (A1 to C2), with a “+” step between each. Students see the same descriptions on the site.</p>
-      <ul class="levels" id="level-list"></ul>
-      <p class="rules">Students move up after passing 3 texts at a level (2 at a “+” level). A pass is 4 of 5 points. Two weak texts in a row, or four texts in a row without a pass, move a student down one step.</p>
-    </section>
-
     <section class="card" id="good-to-know" aria-labelledby="good-h">
       <h2 id="good-h"><span data-icon="lightbulb"></span>Good to know</h2>
       <div class="notes">
@@ -371,6 +390,7 @@ a { color: var(--primary); }
       <div>
       <h3>Levels</h3>
       <p>The levels are estimates, made when the texts were written, and are for guidance only. They are not grades and should not be used for grading. The student report says the same: “This report shows your reading. It is not a grade.”</p>
+      <p class="rules">Students move up after passing 3 texts at a level (2 at a “+” level). A pass is 4 of 5 points. Two weak texts in a row, or four texts in a row without a pass, move a student down one step.</p>
       </div>
       <div>
       <h3>Privacy</h3>
@@ -1069,10 +1089,7 @@ function bind() {
 
 render();
 
-/* Word Summit — the teacher page: the contents row and "What the levels mean". Class Reports (reports.js) runs before this. */
-
-// The students' level descriptions, copied from app.js by build.py, so the two never differ.
-const LEVEL_TIPS = {"A1": ["Starter reader", "You can read short, simple texts about things you know, like school, family and pets."], "A1+": ["Almost A2", "You can read a little more at a time and find simple facts quickly."], "A2": ["Explorer reader", "You can follow short stories and simple fact texts about everyday life."], "A2+": ["Almost B1", "You can follow longer texts with more details and some talking between people."], "B1": ["Independent reader", "You can read a story or an article on your own and start to read between the lines."], "B1+": ["Almost B2", "You can keep going through longer texts and see what the writer wants you to think."], "B2": ["Confident reader", "You can read longer texts on your own and work out most hard words from the text around them."], "B2+": ["Almost C1", "You can follow a writer's arguments and see how they are built up."], "C1": ["Advanced reader", "You can read hard texts with big ideas and spot the writer's own opinion."], "C1+": ["Almost C2", "You can read difficult essays and stories where a lot is only hinted at."], "C2": ["Expert reader", "You can read almost anything written for adults, with full understanding."]};
+/* Word Summit — the teacher page: the contents row. Class Reports (reports.js) runs before this. */
 
 function renderContents() {
   const items = [...document.querySelectorAll("main.guide > section[id]")].map(s => {
@@ -1082,15 +1099,7 @@ function renderContents() {
   $("contents").innerHTML = items.join("");
 }
 
-function renderLevels() {
-  $("level-list").innerHTML = LADDER.map(l => {
-    const [name, tip] = LEVEL_TIPS[l] || ["", ""];
-    return `<li><span class="lv-code">${esc(l)}</span><span class="lv-name">${esc(name)}</span><span class="lv-tip">${esc(tip)}</span></li>`;
-  }).join("");
-}
-
 renderContents();
-renderLevels();
 
 </script>
 </body>
